@@ -36,13 +36,12 @@ app.use(session({
 // Set app to use the Handlebars engine
 app.set('view engine', 'handlebars');
 app.engine('handlebars', hb({
-  layoutsDir: __dirname + '/views/layouts'
+  layoutsDir: __dirname + '/views/layouts',
+  partialsDir: __dirname + '/views/partials'
 }));
 app.set('view options', {
   layout: 'main'
 });
-
-hb.registerPartials(__dirname + '/views/partials');
 
 // Pull all style files from the public directory
 app.use(express.static('public'));
