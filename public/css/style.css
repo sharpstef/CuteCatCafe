@@ -1,0 +1,378 @@
+/* CSS DIRECTORY
+	1. =GLOBAL
+	2. =HEADERS
+	3. =NAVIGATION
+	4. =MAIN
+	5. =FORM
+	6. =TABLE
+	7. =FOOTER
+	8. =TERMINAL
+*/
+
+
+/* COLORS
+	- default body text  #363636
+	- primary header     rgb(12, 134, 33)
+	- links active       rgb(31, 175, 96)
+*/
+
+
+/* ===============
+   GLOBAL SETTINGS 
+   =============== */
+
+	 * {
+		font-family: 'Open Sans Condensed', arial, sans;
+	}
+	
+	body {
+		background: #FFF;
+		color: #363636;
+		font-weight: 300;
+		font-size: 16px;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	
+	/* Base link styling */
+	a {
+		color: rgb(98, 31, 175);
+	}
+	
+	a:hover {
+		text-decoration: none;
+	}
+	
+	a img {
+		border: none;
+	}
+	
+	p {
+		line-height: 150%;
+	}
+	
+	/* ===============
+		HEADERS 
+	=============== */
+	
+	.center {
+		text-align: center;
+	}
+	
+	#header {
+		background: #202020;
+		overflow: hidden;
+		padding-top: 2em;
+		height: 180px;
+	}
+	
+	#main-title {
+		margin: 0 auto;
+		text-align: center;
+		text-transform: uppercase;
+		width: 80%;
+	}
+	
+	#main-title h1 {		
+		font-size: 180%;
+	}
+	
+	#main-title h1 a {
+		color: rgb(76, 14, 175);
+		font-size: 1.5em;
+		text-decoration: none;
+	}
+	
+	#main-title p {
+		color: #FFF;
+	}	
+	
+	/* ===============
+		NAVIGATION
+	=============== */
+	
+	#menu {
+		background: rgb(110, 110, 110);
+		height: 70px;
+	}
+	
+	#menu ul {
+		list-style: none;
+		line-height: normal;
+		margin: 0;
+		padding: 0px 0px 0px 0px;
+		text-align: center;
+	}
+	
+	#menu li {
+		display: inline-block;
+	}
+	
+	#menu a {
+		border: none;
+		color: #FFF;
+		display: block;
+		font-size: .9em;
+		letter-spacing: .1em;
+		line-height: 70px;
+		margin-left: -5px;
+		padding: 0px 40px;
+		text-decoration: none;
+		text-align: center;
+		text-transform: uppercase;
+	}
+	
+	#menu a:hover,
+	#menu .current_page a {
+		background: rgb(131, 99, 206);
+		text-decoration: none;
+	}
+	
+	#menu .current_page a {
+		background: rgb(61, 61, 61);
+	}
+	
+	/* ===============
+		MAIN
+	=============== */
+	
+	/* Main page wrapper */
+	#content {
+		margin: 0 auto;
+		min-height: calc(100vh - 250px);
+		width: 80%;
+	}
+	
+	/* Overview box */
+	.callout {
+		background: #FFF;
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		margin: 50px auto;
+		padding: 30px;
+		width: 60%;
+	}
+	
+	.callout>h3 {
+		font-size: 1.2em;
+		text-align: center;
+		text-transform: uppercase;
+	}
+	
+	.callout ul {
+		list-style: none;
+	}
+	
+	.callout li::before {
+		content: '>';
+		padding-right: 10px;
+	}
+	
+	.column-set {
+		box-sizing: border-box;
+	}
+	
+	.column-set:after {
+		clear: both;
+		content: "";
+		display: table;
+	}
+	
+	.column {
+		float: left;
+		width: 50%;
+	}
+	
+	h2.title {
+		color: rgb(77, 37, 172);
+		font-size: 1.8em;
+		font-weight: 400;
+		margin-bottom: .5em;
+		text-transform: uppercase;
+	}
+	
+	/* ===============
+		FORM
+	=============== */
+	
+	.generic-form {
+		background: #FFFFFF;
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		margin: 2em auto;
+		padding: 30px;
+		width: 500px;
+	}
+	
+	.alt {
+		margin: 2em 0;
+	}
+	
+	.generic-form h2 {
+		background: #666666;
+		color: #BEBEBE;
+		font-size: 20px;
+		font-weight: 400;
+		margin: -30px -30px 30px -30px;
+		padding: 20px;
+		text-transform: uppercase;
+	}
+	
+	.generic-form label {
+		color: rgb(131, 99, 206);
+		font-size: 18px;
+		font-weight: 400;
+		margin: 30px 0 10px 0;
+	}
+
+	.generic-form input[type="radio"],
+	.generic-form input[type="text"],
+	.generic-form input[type="number"],
+	.generic-form input[type="date"],
+	.generic-form input[type="email"],
+	.generic-form input[type="password"],
+	textarea {
+		font-size: 16px;
+		padding: 7px 0;
+		margin-bottom: 20px;
+	}
+	
+	.generic-form input[type="text"],
+	.generic-form input[type="number"],
+	.generic-form input[type="date"],
+	.generic-form input[type="email"],
+	.generic-form input[type="password"],
+	textarea {
+		background: transparent;
+		border: none;
+		border-bottom: 1px solid #DDD;
+		box-sizing: border-box;
+		display: block;
+		height: 45px;
+		max-width: 100%;
+		outline: none;
+		width: 100%;
+	}
+	
+	.generic-form input[type="submit"] {
+		background-color: rgb(131, 99, 206);
+		border: 1px solid rgb(90, 48, 156);
+		cursor: pointer;
+		color: #FFFFFF;
+		display: inline-block;
+		font-size: 14px;
+		padding: 8px 18px;
+		margin-top: 10px;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+	
+	.generic-form input[type="submit"]:hover {
+		background-color: rgb(16, 121, 13);
+	}
+	
+	.generic-form textarea {
+		max-height: 400px;
+		min-height: 100px;
+		min-width: 100%;
+	}
+	
+	/* Form error messages */
+	.error,
+	.success {
+		text-align: center;
+	}
+	
+	.error {
+		color: red;
+	}
+	
+	.success {
+		color: green;
+	}
+		
+	/* ===============
+		TABLE
+	=============== */
+	
+	table {
+		background: white;
+		border-collapse: collapse;
+		margin: 0 auto;
+		padding: 5px;
+		width: 100%;
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+		-webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+	}
+	
+	th {
+		color: #FFF;
+		background: #313131;
+		border-right: 1px solid #344538;
+		font-weight: 400;
+		padding: 24px;
+		text-align: left;
+		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+		text-transform: uppercase;
+		vertical-align: middle;
+	}
+
+	th:last-child {
+		border-right: none;
+	}
+	
+	tr {
+		border-top: 1px solid #C1C3D1;
+		border-bottom: 1px solid #C1C3D1;
+		color: #666B85;
+		font-size: 16px;
+		font-weight: normal;
+		text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+	}
+	
+	tr:hover td {
+		background: rgb(121, 51, 202);
+		border-top: 1px solid rgb(34, 46, 38);
+		color: #FFFFFF;
+	}
+
+	tr:last-child {
+		border-bottom: none;
+	}
+	
+	td {
+		background: #FFFFFF;
+		border-right: 1px solid rgb(193, 209, 194);
+		font-weight: 300;
+		font-size: 18px;
+		padding: 20px;
+		text-align: left;
+		vertical-align: middle;
+	}
+	
+	td:last-child {
+		border-right: 0px;
+	}
+	
+	/* ===============
+		FOOTER
+	=============== */
+	
+	#footer {
+		background: #1E1B1A;
+		color: #ADADAD;
+		height: 50px;
+		overflow: hidden;
+		padding: 5em 0em;
+	}
+	
+	#footer p {
+		color: #FFF;
+		font-weight: 400;
+		font-size: 1.2em;
+		text-align: center;
+	}

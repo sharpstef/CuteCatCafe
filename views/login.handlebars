@@ -1,0 +1,19 @@
+<div id="userform">
+  {{#if error}}
+  <h2 class="error">{{error}}</h2>
+  {{/if}}
+  {{#if success}}
+  <h2 class="success">{{success}}</h2>
+  {{/if}}
+  <div id="loginForm" class="generic-form">
+    <h2>Login</h2>
+    <form action="/login" method="post">
+      <label for="email">Email</label><br>	
+      <input type="text" id="email" name="email" required autocomplete="email" />
+      <label for="password">Password</label><br>
+      <input type="password" id="password" name="password" required autocomplete="current-password" />
+      <input type="submit" value="Login" action="/login" />
+      <a href="/register" id="register">Register</a>
+    </form>
+  </div>
+</div>

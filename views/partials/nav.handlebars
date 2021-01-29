@@ -1,0 +1,11 @@
+<section id="navigation">
+    <div id="menu">
+		<ul>
+			{{#if menu_data}}
+				{{#each menu_data}}
+					<li class="{{this.CLASS}}"><a href="{{this.REF}}">{{this.NAME}}</a></li>
+				{{/each}}
+			{{/if}}
+		</ul>
+    </div>
+</section>
