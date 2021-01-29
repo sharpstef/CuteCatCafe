@@ -1,5 +1,25 @@
 const crypto = require('crypto');
 const util = require('./util');
+const mysql = require('mysql');
+const config = require('./config');
+
+var connection = mysql.createConnection({
+  host     : config.HOST,
+  user     : config.USER,
+  password : config.AUTH,
+  database : config.DATABASE
+});
+
+connection.connect(function(err) {
+  if (err) {
+    console.error('Database connection failed: ' + err.stack);
+    return;
+  }
+
+  console.log('Connected to database.');
+});
+
+connection.end();
 
 let customer = {
   /**
