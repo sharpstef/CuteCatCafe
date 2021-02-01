@@ -6,16 +6,6 @@ module.exports = Object.freeze({
         CLASS: 'none'
       },
       {
-        NAME: 'Rooms',
-        REF: '/rooms',
-        CLASS: 'none'
-      },
-      {
-        NAME: 'Cats',
-        REF: '/cats',
-        CLASS: 'none'
-      },
-      {
         NAME: 'Menu',
         REF: '/menu',
         CLASS: 'none'

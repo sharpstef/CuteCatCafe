@@ -5,16 +5,25 @@
     <title>Cute Cat Cafe</title>
     <meta name="description" content="A fictional cat cafe in Portland Oregon.">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <!-- Add site styling -->
-    <link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- 3rd Party Style Sheets -->
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/animate.css">
+    <link rel="stylesheet" href="./css/magnific-popup.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+
+    <!-- Site Main Style -->
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="shortcut icon" href="./images/favicon.ico">
   </head>
   <body>
-    {{> header}}
     {{> nav}}
-    <section id="content">
-      {{{body}}}
-    </section>
+    {{{body}}}
     {{> footer}}
   </body>
+  <script src="./js/jquery.js"></script>
+  <script src="./js/jquery.stellar.min.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/jquery.magnific-popup.min.js"></script>
+  <script src="./js/main.js"></script>
 </html>
