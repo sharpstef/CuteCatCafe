@@ -10,3 +10,112 @@
         </div>
     </div>
 </section>
+
+<div class="container">
+    <div class="row">
+        <h1 class="centered">Account Information</h1>
+    </div>
+    <div class="row centered">
+        <div class="col-md-2 col-sm-6">
+            <p><b>First Name:</b> Peter</p>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <p><b>Last Name:</b> Rabbit</p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <p><b>Email:</b> peter.rabbit@foo.bar</p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <p><b>Password:</b> passw0rd</p>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <p><b>Member Type:</b> Member</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h1 class="centered">Order History</h1>
+    </div>
+</div>
+
+<div class="container">
+    <table class="generic">
+    <thead>
+        <tr>
+        <th>Purchase Date</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Items</th>
+        <th>Update</th>
+        <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>Monday, February 1, 2021 8:09:35 AM</td>
+                <td>$3.50</td>
+                <td>Complete</td>
+                <td>1 mocha</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        <!--{{#if data}} -->
+            {{#each data}}
+            <tr>
+                <td>{{this.purchaseTime}}</td>
+                <td>{{this.totalAmount}}</td>
+                <td>{{this.complete}}</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        {{/each}}
+        <!-- {{/if}} -->
+    </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h1 class="centered">Reservation History</h1>
+    </div>
+</div>
+
+<div class="container">
+    <table class="generic">
+    <thead>
+        <tr>
+        <th>Room</th>
+        <th>Total</th>
+        <th>Reservation Time</th>
+        <th>Length</th>
+        <th>Update</th>
+        <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>Green Room</td>
+                <td>$30.00</td>
+                <td>Monday, February 1, 2021 8:00:00 AM</td>
+                <td>60 minutes</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        <!--{{#if data}} -->
+            {{#each data}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.roomDescription}}</td>
+                <td>{{this.reservable}}</td>
+                <td>{{this.fee}}</td>
+                <td>{{this.catID}}</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        {{/each}}
+        <!-- {{/if}} -->
+    </tbody>
+    </table>
+</div>

@@ -195,6 +195,10 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+app.get('/admin', (req, res) => {
+  res.render('admin', util.updateMenu('/', {}));
+});
+
 // 404 page render
 app.use((req, res) => {
   res.status(404);

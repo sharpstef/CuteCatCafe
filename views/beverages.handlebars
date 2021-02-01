@@ -1,0 +1,51 @@
+<section id="content" class="banner" data-stellar-background-ratio="0.5">
+    <div class="row">
+        <div class="item page-alt item-second">
+            <div class="caption caption-alt">
+                <div class="container">
+                    <h1>Beverage Catalog</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <table class="generic">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Ingredients</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>Tumeric Mocha</td>
+                <td>An odd mocha that shouldn't exist.</td>
+                <td>Hot</td>
+                <td>$3.50</td>
+                <td>tumeric, chocolate</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        <!--{{#if data}} -->
+            {{#each data}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.type}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.ingredients}}</td>
+                <td><a href="#"><i class="fa fa-check-circle"></i></td>
+                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+            </tr>
+        {{/each}}
+        <!-- {{/if}} -->
+    </tbody>
+    </table>
+</div>
