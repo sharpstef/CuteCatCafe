@@ -349,14 +349,6 @@ section {
     margin: 0;
 } 
 
-.team-thumb img {
-    width: 100%;
-}
-
-#team {
-  text-align: center;
-}
-
 @media (min-width: 768px) {
 	.banner .col-md-8 {
       padding-left: 0;
@@ -373,6 +365,10 @@ section {
     color: #000;
     cursor: e-resize;
     padding: 4em 0 0 2em;
+}
+
+.banner .caption.caption-alt {
+    text-align: center;
 }
 
 .banner .item {
@@ -503,7 +499,8 @@ section {
 }
    
 .generic-form input[type="submit"]:hover {
-    background-color: #c061bb;
+    background-color: #fff;
+    color: #000;
 }
    
 .generic-form textarea {
@@ -516,11 +513,11 @@ section {
 	TABLE
 ====================================*/
    
-.generic table {
+.generic {
     background: white;
-    margin: 0 auto;
+    margin: 40px auto;
     padding: 5px;
-    width: 100%;
+    width: 80%;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
     -moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
     -webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
@@ -582,8 +579,6 @@ footer {
 	border-top: 1px solid rgba(0,0,0,0.05);
 	padding: 60px 0;
 	padding-bottom: 40px;
-	margin: 0 auto;
-	width: 80%;
 }
 
 footer .title {

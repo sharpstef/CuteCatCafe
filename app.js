@@ -115,6 +115,45 @@ app.get('/', (req, res) => {
   res.render('index', util.updateMenu('/', context, req.user));
 });
 
+app.get('/account', (req, res) => {
+  res.render('account', util.updateMenu('/', {}));
+});
+
+app.get('/beverages', (req, res) => {
+  res.render('beverages', util.updateMenu('/', {}));
+});
+
+app.get('/cats', (req, res) => {
+  res.render('cats', util.updateMenu('/', {}));
+});
+
+app.get('/checkout', (req, res) => {
+  let context = {}
+  res.render('checkout', util.updateMenu('/', {}));
+});
+
+app.get('/ingredients', (req, res) => {
+  res.render('ingredients', util.updateMenu('/', {}));
+});
+
+app.get('/menu', (req, res) => {
+  let context = {}
+  res.render('menu', util.updateMenu('/menu', context));
+});
+
+app.get('/rooms', (req, res) => {
+  res.render('rooms', util.updateMenu('/', {}));
+});
+
+app.get('/rooms', (req, res) => {
+  res.render('rooms', util.updateMenu('/', {}));
+});
+
+app.get('/reservations', (req, res) => {
+  let context = {}
+  res.render('reservations', util.updateMenu('/reservations', context));
+});
+
 // Auth pages
 app.get('/login', (req, res) => {
   let context = {}

@@ -1,34 +1,41 @@
 <section id="content" class="banner" data-stellar-background-ratio="0.5">
     <div class="row">
         <div class="item page-alt item-second">
+            <div class="caption caption-alt">
+                <div class="container">
+                    <h1>Register</h1>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<div id="userform">
-  {{#if error}}
-  <h2 class="error">{{error}}</h2>
-  {{/if}}
-  {{#if success}}
-  <h2 class="success">{{success}}</h2>
-  {{/if}}
-    <div id="registerForm" class="generic-form" >
-    <h2>Register</h2>
-    <form action="/register" method="post">
-      <label for="fname">First Name</label><br>	
-      <input type="text" id="fname" name="fname" required />
-      <label for="lname">Last Name</label><br>	
-      <input type="text" id="lname" name="lname" required />
-      <label for="email">Email</label><br>	
-      <input type="text" id="email" name="email" required />
-      <label for="password">Password</label><br>
-      <input type="password" id="password" name="password" required />
-      <input type="radio" id="member" name="level" value="member">
-      <label for="member">Member</label>
-      <input type="radio" id="admin" name="level" value="admin">
-      <label for="admin">Admin</label><br>
-      <input type="submit" value="Register" />
-      <a href="/login" id="login">Login</a>
-    </form>
+<div class="container">
+  <div id="userform">
+    {{#if error}}
+    <h2 class="error">{{error}}</h2>
+    {{/if}}
+    {{#if success}}
+    <h2 class="success">{{success}}</h2>
+    {{/if}}
+      <div id="registerForm" class="generic-form" >
+      <h2>Create Account</h2>
+      <form action="/register" method="post">
+        <label for="fname">First Name</label><br>	
+        <input type="text" id="fname" name="fname" required />
+        <label for="lname">Last Name</label><br>	
+        <input type="text" id="lname" name="lname" required />
+        <label for="email">Email</label><br>	
+        <input type="text" id="email" name="email" required />
+        <label for="password">Password</label><br>
+        <input type="password" id="password" name="password" required />
+        <input type="radio" id="member" name="level" value="member">
+        <label for="member">Member</label>
+        <input type="radio" id="admin" name="level" value="admin">
+        <label for="admin">Admin</label><br>
+        <input type="submit" value="Register" />
+        <a href="/login" id="login">Login</a>
+      </form>
+    </div>
   </div>
 </div>
