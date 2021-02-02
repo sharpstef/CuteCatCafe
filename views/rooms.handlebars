@@ -11,6 +11,39 @@
 </section>
 
 <div class="container">
+  <div id="userform">
+    {{#if error}}
+    <h2 class="error">{{error}}</h2>
+    {{/if}}
+    {{#if success}}
+    <h2 class="success">{{success}}</h2>
+    {{/if}}
+      <div id="roomForm" class="generic-form" >
+      <h2>Add Room</h2>
+      <form action="/addRoom" method="post">
+        <label for="name">Name</label><br>	
+        <input type="text" id="name" name="name" required />
+        <label for="description">Description</label><br>	
+        <input type="text" id="description" name="description" required />
+        <label for="price">Fee</label><br>	
+        <input type="number" id="price" name="price" required />
+        <label for="cat-search">Cat:</label>
+        <input type="search" id="cat-search" name="q"
+            aria-label="Search for cat" placeholder="Find cat"> <br>
+        <fieldset>
+            <legend> Reservable: </legend>
+            <input type="radio" id="yes" name="type" value="yes">
+            <label for="yes">Yes</label>
+            <input type="radio" id="no" name="type" value="no">
+            <label for="no">No</label>
+        </fieldset>
+        <input type="submit" value="Add" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container">
     <table class="generic">
     <thead>
         <tr>

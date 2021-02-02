@@ -11,6 +11,34 @@
 </section>
 
 <div class="container">
+  <div id="userform">
+    {{#if error}}
+    <h2 class="error">{{error}}</h2>
+    {{/if}}
+    {{#if success}}
+    <h2 class="success">{{success}}</h2>
+    {{/if}}
+      <div id="catForm" class="generic-form" >
+      <h2>Add Cat</h2>
+      <form action="/addCat" method="post">
+        <label for="date">Date</label><br>	
+        <input type="date" id="date" name="date" required />
+        <label for="name">Name</label><br>	
+        <input type="text" id="name" name="name" required />
+        <label for="yesbreed">Breed</label><br>	
+        <input type="text" id="yesbreed" name="yesbreed" required />
+        <label for="age">Age</label><br>	
+        <input type="number" id="age" name="age" required />
+        <label for="room-search">Assigned Room:</label>
+        <input type="search" id="room-search" name="q"
+            aria-label="Search for room" placeholder="Find available room"> <br>
+        <input type="submit" value="Add" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container">
     <table class="generic">
     <thead>
         <tr>

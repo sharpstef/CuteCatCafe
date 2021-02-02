@@ -11,6 +11,25 @@
 </section>
 
 <div class="container">
+  <div id="userform">
+    {{#if error}}
+    <h2 class="error">{{error}}</h2>
+    {{/if}}
+    {{#if success}}
+    <h2 class="success">{{success}}</h2>
+    {{/if}}
+      <div id="ingredientForm" class="generic-form" >
+      <h2>Add Ingredient</h2>
+      <form action="/addIngredient" method="post">
+        <label for="name">Name</label><br>	
+        <input type="text" id="name" name="name" required />
+        <input type="submit" value="Add" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container">
     <table class="generic">
     <thead>
         <tr>

@@ -1,18 +1,12 @@
 /* CSS DIRECTORY
 	1. =GLOBAL
-	2. =HEADERS
-	3. =NAVIGATION
-	4. =MAIN
-	5. =FORM
-	6. =TABLE
-	7. =FOOTER
 */
 
 
 /* COLORS
-	- default body text  #363636
-	- primary header     rgb(12, 134, 33)
-	- links active       rgb(31, 175, 96)
+	- default body text  
+	- primary header     
+	- links active       
 */
 
 
@@ -46,14 +40,14 @@ body {
 	LINKS 
 ====================================*/
 a {
-    color: #252525;
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
-    text-decoration: none !important;
+  color: #252525;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  text-decoration: none !important;
 }
    
 a:hover, a:active, a:focus {
-    color: #7e317a;
+  color: #7e317a;
 	outline: none;
 	text-decoration: none;
 }
@@ -143,12 +137,12 @@ p {
 }
 
 @media only screen and (max-width: 580px) {
-    h1 {
-      font-size: 2.1em;
-    }
+  h1 {
+    font-size: 2.1em;
+  }
 
-    h2 {
-      font-size: 1.8em;
+  h2 {
+    font-size: 1.8em;
 	}
 	
 	h3 {
@@ -246,6 +240,10 @@ p {
 .main-nav .navbar-toggle .icon-bar {
     background: #252525;
     border-color: transparent;
+}
+
+.main-nav .fa {
+  font-size: 20px;
 }
 
 /*====================================
@@ -650,11 +648,15 @@ section {
     text-transform: uppercase;
 }
    
-.generic-form label {
+.generic-form label, .generic-form legend {
     color: #c061bb;
     font-size: 18px;
     font-weight: 400;
     margin: 30px 0 10px 0;
+}
+
+.generic-form legend {
+  border-bottom: none;
 }
    
 .generic-form input[type="radio"],

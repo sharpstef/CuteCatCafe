@@ -11,6 +11,41 @@
 </section>
 
 <div class="container">
+  <div id="userform">
+    {{#if error}}
+    <h2 class="error">{{error}}</h2>
+    {{/if}}
+    {{#if success}}
+    <h2 class="success">{{success}}</h2>
+    {{/if}}
+      <div id="beverageForm" class="generic-form" >
+      <h2>Add Beverage</h2>
+      <form action="/addBeverage" method="post">
+        <label for="name">Name</label><br>	
+        <input type="text" id="name" name="name" required />
+        <label for="description">Description</label><br>	
+        <input type="text" id="description" name="description" required />
+        <label for="price">Price</label><br>	
+        <input type="number" id="price" name="price" required />
+        <fieldset>
+            <legend> Type: </legend>
+            <input type="radio" id="hot" name="type" value="hot">
+            <label for="hot">Hot</label>
+            <input type="radio" id="cold" name="type" value="cold">
+            <label for="cold">Cold</label>
+            <input type="radio" id="blended" name="type" value="blended">
+            <label for="blended">Blended</label><br>
+        </fieldset>
+        <label for="ing-search">Ingredients:</label>
+        <input type="search" id="ing-search" name="q"
+            aria-label="Search for ingredients" placeholder="Search for ingredients"> <br>
+        <input type="submit" value="Add" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container">
     <table class="generic">
     <thead>
         <tr>
