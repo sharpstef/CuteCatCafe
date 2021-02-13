@@ -60,7 +60,7 @@ let customer = {
    * @param {*} email
    * @param {*} callback
    */
-  findByemail: (email, callback) => {
+  findByEmail: (email, callback) => {
 
   },
 
