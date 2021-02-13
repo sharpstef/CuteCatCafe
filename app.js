@@ -22,7 +22,7 @@ const util = require('./util');
 *************************************************************************************************/
 // Initialize the express server
 const app = express();
-const port = 3000;
+const port = 34400;
 
 app.use(session({
   secret: 'secret squirel secret',
