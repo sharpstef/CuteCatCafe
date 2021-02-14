@@ -5,8 +5,8 @@ VALUES
 ('Jana', 'Doogan', 'j.doogan@gmail.com','ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d','2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 1, 0),
 ('Yu', 'Han', 'han@gmail.com','ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d','2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 1, 0),
 ('Maeve', 'Smith', 'pinkbutterfly@gmail.com','ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d','2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 1, 0),
-('Stefania', 'Sharp', 'sharp@cutecatcafe.com', 'ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d', '2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 1, 1),
-('Naomi', 'Campbell', 'naomi@cutecatcafe.com', 'ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d', '2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 1, 1);
+('Stefania', 'Sharp', 'sharp@cutecatcafe.com', 'ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d', '2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 0, 1),
+('Naomi', 'Campbell', 'naomi@cutecatcafe.com', 'ff8b3b965f8cc4c092a9dcc58315d209eaaeea76a5f36b5d7304760bb6833c26b2e452b61e1039df169da53602def1169bf89e17b9939f8b3bfd289935084b2d', '2c4e8dffeecd9e9ea554b4efbe9fe9a9ed7ad79b95c164a7d64903133dd245bd', 0, 1);
 
 -- Sample values for Cats
 INSERT INTO Cats (name, breed, age, dateAdmitted, adopted)

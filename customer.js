@@ -1,27 +1,20 @@
 const crypto = require('crypto');
 const util = require('./util');
-const mysql = require('mysql');
-const config = require('./config');
+const pool = require('./db');
 
-var connection = mysql.createConnection({
-  host     : config.HOST,
-  user     : config.USER,
-  password : config.AUTH,
-  database : config.DATABASE
-});
+//pool.end();
 
-connection.connect(function(err) {
-  if (err) {
-    console.error('Database connection failed: ' + err.stack);
-    return;
-  }
+let customerTemplate = {
+  firstName: null,
+  lastName: null,
+  email: null,
+  password: null,
+  salt: null,
+  member: 0,
+  isAdmin: 0
+};
 
-  console.log('Connected to database.');
-});
-
-connection.end();
-
-let customer = {
+let Customer = {
   /**
    * Helper function to compare a provided password
    * to the password results from a hash. 
@@ -55,23 +48,53 @@ let customer = {
 
   /**
    * Get all customers records matching a email.
-   * Only one record should be returned.
+   * Only one customer should be returned.
    * 
    * @param {*} email
    * @param {*} callback
    */
   findByEmail: (email, callback) => {
+    let query = 'SELECT * FROM Customers WHERE email=?';
+    let values = [email];
 
+    console.info("Querying for record with email: ",email);
+
+    pool.query(query, values, (err, result, fields) => {
+      if (err) {
+        console.error("Unable to find user", email, ". Error JSON:",
+              JSON.stringify(err, null, 2));
+        return callback(err, null);
+      }
+      if(result.length > 0) {
+        return callback(null, result[0]);
+      } else {
+        return callback(2, null);
+      }
+    });
   },
 
   /**
-   * Get a customer record by customerID primary key 
+   * Get a customer customer by customerID primary key 
    * 
    * @param {*} attributes
    * @param {*} callback
    */
   findByID: (attributes, callback) => {
+    let query = 'SELECT * FROM Customers WHERE customerID=?';
+    let values = [attributes.customerID];
 
+    pool.query(query, values, (err, result, fields) => {
+      if (err) {
+        console.error("Unable to find user", attributes.customerID, ". Error JSON:",
+              JSON.stringify(err, null, 2));
+        return(err, null);
+      }
+      if(result[0]) {
+        return callback(null, result[0]);
+      } else {
+        return callback(2, null);
+      }
+    });
   },
 
   /**
@@ -82,24 +105,51 @@ let customer = {
    * @param {*} password
    * @param {*} callback 
    */
-  createCustomer: (email, password, callback) => {
-    customer.findByemail(email, (err, customer) => {
-
+  createCustomer: (attributes, callback) => {
+    let email = attributes.email;
+    Customer.findByEmail(email, (err, data) => {
       // Email is a duplicate, reject the create
-      if(customer){
+      if(data){
         return callback(2, null);
       }
+
+      let customer = Customer.newCustomer(attributes);
+      let query = 'INSERT INTO Customers SET ?';
+      pool.query(query, customer, (err, result, fields) => {
+        if (err) {
+          console.error("Unable to add new customer", customer.email, ". Error JSON:",
+            JSON.stringify(err, null, 2));
+            return callback(err, null);
+        } else {
+          customer.customerID = result.insertId;
+          return callback(null, customer);
+        }
+      });
+
     });
   },
 
   /**
    * Update an existing customer with new details.
    * 
-   * @param {*} customer 
+   * @param {*} attributes
    * @param {*} callback 
    */
-  saveCustomer: (customer, callback) => {
+  saveCustomer: (attributes, callback) => {
+    let query = 'UPDATE Customers SET ? WHERE customerID=?';
 
+    let customer= Customer.newCustomer(attributes);
+    let values = [user, attributes.customerID];
+
+    pool.query(query, values, (err, result, fields) => {
+      if (err) {
+        console.error("Unable to update user", user.email, ". Error JSON:",
+          JSON.stringify(err, null, 2));
+          return callback(err, null);
+      } else {
+        return callback(null, result[0]);
+      }
+    });
   },
 
   /**
@@ -109,17 +159,23 @@ let customer = {
    * @param {String} email 
    * @param {String} password 
    */
-  newCustomer: (email, password) => {
+  newCustomer: (attributes) => {
     let customer = customerTemplate;
-    const saltHash = customer.generatePassword(password); 
+    const saltHash = Customer.generatePassword(attributes.password); 
     customer.salt = saltHash.salt;
-    customer.hash = saltHash.hash;
+    customer.password = saltHash.hash;
 
-    customer.email = email;
-    customer.customerID = '_' + Math.random().toString(36).substr(2, 9);
+    // Fill in the remaining attributes
+    customer.firstName = attributes.fname ? attributes.fname : null;
+    customer.lastName = attributes.lname ? attributes.lname : null;
+    customer.email = attributes.email;
+    customer.member = attributes.hasOwnProperty('member') ? 1 : 0;
+    customer.isAdmin = attributes.hasOwnProperty('admin') ? 1 : 0;
+
+    console.info("Preparing to add new customer: ", JSON.stringify(customer));
 
     return customer;
   }
 };
 
-module.exports = customer;
+module.exports = Customer;

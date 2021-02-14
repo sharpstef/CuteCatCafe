@@ -42,7 +42,7 @@ module.exports = {
       }
 
       if(item.NAME === "Login" || item.NAME=== "Logout") {
-        if(login_status && login_status.userID) {
+        if(login_status && login_status.customerID) {
           item.NAME = "Logout";
           item.REF = "/logout";
         } else {

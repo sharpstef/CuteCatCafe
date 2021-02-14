@@ -3,7 +3,7 @@ CREATE TABLE Customers (
     customerID int AUTO_INCREMENT NOT NULL,
     firstName varchar(50),
     lastName varchar(50),
-    email varchar(255) NOT NULL,
+    email varchar(255) NOT NULL UNIQUE,
     password varchar(520) NOT NULL,
     salt varchar(255) NOT NULL,
     member boolean DEFAULT 0,

@@ -25,7 +25,7 @@ const app = express();
 const port = 34400;
 
 app.use(session({
-  secret: 'secret squirel secret',
+  secret: 'secret squirrel secret',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -52,37 +52,38 @@ app.use(parser.urlencoded({
   extended: true
 }));
 
-/*
-
 // Configure user local authentication with Passport
-passport.use(new Strategy({passReqToCallback: true }, function(req, email, password, done) {
-  User.findByEmail(email, function(err, user) {
-    if (err) {
-      req.session.error = "Authentication error. Please try again.";
-      return done(err, false);
-    }
-    if (!user) { 
-      req.session.error = "Invalid email or password.";
-      return done(null, false) 
-    }
-              
-    const isValid = User.validPassword(password, user.hash, user.salt);
-    
-    if (isValid) {
-        return done(null, user);
-    } else {
-        return done(null, false);
-    }
+passport.use(new Strategy({
+  usernameField : 'email',
+  passwordField : 'password',
+  passReqToCallback: true }, function(req, email, password, done) {
+  
+    Customer.findByEmail(email, function(err, user) {
+      if (err) {
+        req.session.error = "Authentication error. Please try again.";
+        return done(err, false);
+      }
+      if (!user) { 
+        req.session.error = "Invalid email or password.";
+        return done(null, false) 
+      }
+                
+      const isValid = Customer.validPassword(password, user.password, user.salt);
+      
+      if (isValid) {
+          return done(null, user);
+      } else {
+          return done(null, false);
+      }
   });
-}
-));
+}));
 
 passport.serializeUser((user, cb) => {
-  cb(null, {id: user.userID});
+  cb(null, {id: user.customerID});
 });
 
 passport.deserializeUser((attributes, cb) => {
-  User.findByID(attributes, (err, user) => {
+  Customer.findByID(attributes, (err, user) => {
     if (err) {
       return cb(err);
     }
@@ -92,7 +93,6 @@ passport.deserializeUser((attributes, cb) => {
 
 app.use(passport.initialize());
 app.use(passport.session());
-*/
 
 /************************************************************************************************* 
   
@@ -176,7 +176,8 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req,res) => {
-  User.createUser(req.body.username, req.body.password, (err, user) => {
+  console.info("New user is: ",JSON.stringify(req.body));
+  Customer.createCustomer(req.body, (err, user) => {
     let context = {};
     console.log("Created user: ",user);
     if(user && user != null) {
