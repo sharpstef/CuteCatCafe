@@ -32,24 +32,21 @@ UPDATE Cats
 SET roomID = (SELECT roomID FROM Rooms WHERE name = 'Yellow Room')
 WHERE name = 'Pouncer';
 UPDATE Rooms
-SET catID = (SELECT catID FROM Cats WHERE name = 'Pouncer')
-AND reservable = 1
+SET catID = (SELECT catID FROM Cats WHERE name = 'Pouncer'), reservable = 1
 WHERE name = 'Yellow Room';
 
 UPDATE Cats 
 SET roomID = (SELECT roomID FROM Rooms WHERE name = 'White Room')
 WHERE name = 'Talon';
 UPDATE Rooms
-SET catID = (SELECT catID FROM Cats WHERE name = 'Talon')
-AND reservable = 1
+SET catID = (SELECT catID FROM Cats WHERE name = 'Talon'), reservable = 1
 WHERE name = 'White Room';
 
 UPDATE Cats 
 SET roomID = (SELECT roomID FROM Rooms WHERE name = 'Green Room')
 WHERE name = 'Boris';
 UPDATE Rooms
-SET catID = (SELECT catID FROM Cats WHERE name = 'Boris')
-AND reservable = 1
+SET catID = (SELECT catID FROM Cats WHERE name = 'Boris'), reservable = 1
 WHERE name = 'Green Room';
 
 -- Link Rooms to Customers for Reservations
@@ -60,7 +57,7 @@ VALUES
 ((SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'), (SELECT roomID FROM Rooms WHERE name='White Room'), 45.00, '2021-02-12 15:00:00', 180),
 ((SELECT customerID FROM Customers WHERE firstName='Jana' AND lastName='Doogan'), (SELECT roomID FROM Rooms WHERE name='Green Room'), 15.00, '2021-02-15 08:00:00', 60),
 ((SELECT customerID FROM Customers WHERE firstName='Maeve' AND lastName='Smith'), (SELECT roomID FROM Rooms WHERE name='Yellow Room'), 10.00, '2021-02-17 12:00:00', 60),
-((SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'), (SELECT roomID FROM Rooms WHERE name='White Room'), 45.00, '2021-02-17 15:00:00', 180),
+((SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'), (SELECT roomID FROM Rooms WHERE name='White Room'), 45.00, '2021-02-17 15:00:00', 180);
 
 -- Sample values for Ingredients
 INSERT INTO Ingredients (name)
@@ -109,7 +106,7 @@ VALUES
 -- Link Ingredients for sample values in Beverages
 INSERT INTO BeverageIngredients (beverageID, ingredientID)
 VALUES
-((SELECT beverageID FROM Beverages WHERE name='Americano'), (SELECT ingredientID FROM Ingredients WHERE name='Brewed Espresso'))
+((SELECT beverageID FROM Beverages WHERE name='Americano'), (SELECT ingredientID FROM Ingredients WHERE name='Brewed Espresso')),
 ((SELECT beverageID FROM Beverages WHERE name='Cappuccino'), (SELECT ingredientID FROM Ingredients WHERE name='Milk')),
 ((SELECT beverageID FROM Beverages WHERE name='Cappuccino'), (SELECT ingredientID FROM Ingredients WHERE name='Brewed Espresso')),
 ((SELECT beverageID FROM Beverages WHERE name='Latte'), (SELECT ingredientID FROM Ingredients WHERE name='Milk')),
@@ -180,21 +177,21 @@ VALUES
 -- Link Beverages to Customers for Orders
 -- Link Beverages to Orders for OrderItems
 INSERT INTO Orders (purchaseTime, totalAmount, complete, customerID)
-VALUES ('2021-02-12 15:34:32', 5.75, 1, (SELECT customerID FROM Customer WHERE firstName='Yu' AND lastName='Han'));
+VALUES ('2021-02-12 15:34:32', 5.75, 1, (SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'));
 INSERT INTO OrderItems (orderID, beverageID, quantity, status)
 VALUES
-((SELECT SCOPE_IDENTITY()), (SELECT beverageID FROM Beverages WHERE name='Coffee Frappe'),1,'delivered');
+((SELECT LAST_INSERT_ID()), (SELECT beverageID FROM Beverages WHERE name='Coffee Frappe'),1,'delivered');
 
 INSERT INTO Orders (purchaseTime, totalAmount, complete, customerID)
-VALUES ('2021-02-12 17:18:30', 3.50, 1, (SELECT customerID FROM Customer WHERE firstName='Yu' AND lastName='Han'));
+VALUES ('2021-02-12 17:18:30', 3.50, 1, (SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'));
 INSERT INTO OrderItems (orderID, beverageID, quantity, status)
 VALUES
-((SELECT SCOPE_IDENTITY()), (SELECT beverageID FROM Beverages WHERE name='Americano'),1,'delivered');
+((SELECT LAST_INSERT_ID()), (SELECT beverageID FROM Beverages WHERE name='Americano'),1,'delivered');
 
 INSERT INTO Orders (purchaseTime, totalAmount, complete, customerID)
-VALUES ('2021-02-15 15:34:32', 5.50, 0, (SELECT customerID FROM Customer WHERE firstName='Jana' AND lastName='Doogan'));
+VALUES ('2021-02-15 15:34:32', 5.50, 0, (SELECT customerID FROM Customers WHERE firstName='Jana' AND lastName='Doogan'));
 INSERT INTO OrderItems (orderID, beverageID, quantity, status)
 VALUES
-((SELECT SCOPE_IDENTITY()), (SELECT beverageID FROM Beverages WHERE name='Iced Tea'),1,'ordered'),
-((SELECT SCOPE_IDENTITY()), (SELECT beverageID FROM Beverages WHERE name='Coffee'),1,'ordered');
+((SELECT LAST_INSERT_ID()), (SELECT beverageID FROM Beverages WHERE name='Iced Tea'),1,'ordered'),
+((SELECT LAST_INSERT_ID()), (SELECT beverageID FROM Beverages WHERE name='Coffee'),1,'ordered');
 

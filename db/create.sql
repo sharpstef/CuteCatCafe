@@ -2,7 +2,7 @@
 CREATE TABLE Customers (
     customerID int AUTO_INCREMENT NOT NULL,
     firstName varchar(50),
-    lastName varchar(50) NOT NULL,
+    lastName varchar(50),
     email varchar(255) NOT NULL,
     password varchar(520) NOT NULL,
     salt varchar(255) NOT NULL,
@@ -20,15 +20,13 @@ CREATE TABLE Cats (
     dateAdmitted date NOT NULL,
     adopted boolean NOT NULL DEFAULT 0,
     roomID int,
-    PRIMARY KEY (catID),
-    FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
-    ON DELETE SET NULL
+    PRIMARY KEY (catID)    
 );
 
 -- Records the details for each room in the facility. 
 CREATE TABLE Rooms (
     roomID int AUTO_INCREMENT NOT NULL,
-    name varchar(50) NOT NULL,
+    name varchar(50) NOT NULL UNIQUE,
     roomDescription text(500),
     reservable boolean DEFAULT 0,
     fee decimal(4,2) NOT NULL,
@@ -36,7 +34,15 @@ CREATE TABLE Rooms (
     PRIMARY KEY (roomID),
     FOREIGN KEY (catID) REFERENCES Cats(catID)
     ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
+
+-- Add FK for Cats now that Rooms exists.
+ALTER TABLE Cats
+ADD FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
+ON DELETE SET NULL
+ON UPDATE CASCADE;
+
 
 -- Records the details of each beverage that the cafe offers.
 CREATE TABLE Beverages (
@@ -66,6 +72,7 @@ CREATE TABLE Orders (
     PRIMARY KEY (orderID),
     FOREIGN KEY (customerID) REFERENCES Customers(customerID)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- Records reservation details for a room reserved by a customer.
@@ -74,13 +81,15 @@ CREATE TABLE Reservations (
     customerID int NOT NULL,
     roomID int NOT NULL,
     totalFee decimal(4,2) NOT NULL,
-    reservationTime date-time NOT NULL,
+    reservationTime datetime NOT NULL,
     reservationDuration int NOT NULL,
     PRIMARY KEY (reservationID),
     FOREIGN KEY (customerID) REFERENCES Customers(customerID)
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 -- Connects beverages to their list of ingredients.
@@ -92,6 +101,7 @@ CREATE TABLE BeverageIngredients (
     ON DELETE CASCADE,
     FOREIGN KEY (ingredientID) REFERENCES Ingredients(ingredientID)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 --  Records the preparation status of a beverage in an order.
@@ -103,7 +113,9 @@ CREATE TABLE OrderItems (
     CHECK (status='ordered' OR status='prepared' OR status='delivered'),
     PRIMARY KEY (beverageID, orderID),
     FOREIGN KEY (beverageID) REFERENCES Beverages(beverageID)
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
     FOREIGN KEY (orderID) REFERENCES Orders(orderID)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
