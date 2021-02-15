@@ -226,15 +226,15 @@ WHERE name = :name;
     Query to delete existing data from the Beverages table
     Delete cascades to BeverageIngredients
     Delete cascades to OrderItems
-    : used to indicated system provided value (id is stored as hidden in page)
+    : used to indicated system provided value (ID is stored as hIDden in page)
 */
 
-DELETE FROM Beverages WHERE beverageId = :condition;
+DELETE FROM Beverages WHERE beverageID = :condition;
 
 /* 
     Query to delete existing data from the Cats table
     Delete cascades a NULL to Rooms for catID
-    : used to indicate system provided value (id is stored as hidden in page)
+    : used to indicate system provided value (ID is stored as hIDden in page)
 */
 
 DELETE FROM Cats WHERE catID = :condition;
@@ -242,22 +242,22 @@ DELETE FROM Cats WHERE catID = :condition;
 /* 
     Query to delete existing data from the Ingredients table
     Delete cascades to BeverageIngredients
-    : used to indicate system provided value (id is stored as hidden in page)
+    : used to indicate system provided value (ID is stored as hIDden in page)
 */
 
-DELETE FROM Ingredients WHERE ingredientId = :condition;
+DELETE FROM Ingredients WHERE ingredientID = :condition;
 
 /* 
     Query to delete existing data from the Orders table
     Delete cascades to OrderItems
-    : used to indicate system provided value (id is stored as hidden in page)
+    : used to indicate system provided value (ID is stored as hIDden in page)
 */
 
-DELETE FROM Orders WHERE orderId = :condition;
+DELETE FROM Orders WHERE orderID = :condition;
 
 /* 
     Query to delete existing data from the Reservations table
-    : used to indicate system provided value (id is stored as hidden in page)
+    : used to indicate system provided value (ID is stored as hIDden in page)
 */
 
 DELETE FROM Reservations WHERE reservationID = :condition;
@@ -265,7 +265,7 @@ DELETE FROM Reservations WHERE reservationID = :condition;
 /* 
     Query to delete existing data from the Rooms table
     Delete cascades a NULL to Cats for roomID
-    : used to indicate system provided value (id is stored as hidden in page)
+    : used to indicate system provided value (ID is stored as hIDden in page)
 */
 
 DELETE FROM Rooms WHERE roomID = :condition;
