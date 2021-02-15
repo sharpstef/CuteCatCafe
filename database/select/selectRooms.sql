@@ -1,11 +1,12 @@
 /*
-    Query to find all Rooms with a given name.
+    Query to find all Rooms and their associated Cats.
+    Used by the Admin/Rooms page. 
     Used by the Reservations page when completing a booking.
-    Used by the Cats insert.
 
     : used to indicated user provided value
 */
 
-SELECT * 
-FROM Rooms
-WHERE name = :name;
+SELECT r.roomID, r.name, r.roomDescription, r.reservable, r.fee, c.name
+FROM Rooms c
+JOIN Cats c ON c.roomID = r.roomID
+ORDER BY r.name ASC;

@@ -150,11 +150,9 @@ app.get('/account', isAuthenticated, (req, res) => {
         };        
         Account.getOrdersByCustomer(req.user.customerID, (err, orders) => {
             context.data.orderData = orders;
-            console.info(JSON.stringify(orders));
 
             Account.getReservationsByCustomer(req.user.customerID, (err, reservations) => {
                 context.data.resData = reservations;
-                console.info(JSON.stringify(reservations));
                 res.render('account', util.updateMenu('/', context, req.user));
             });
         });
