@@ -1,5 +1,8 @@
 
--- Query to delete existing data from the Ingredients table
--- : used to indicated user or system provided value
+/* 
+    Query to delete existing data from the Ingredients table
+    Delete cascades to BeverageIngredients
+    : used to indicate system provided value (id is stored as hidden in page)
+*/
 
-DELETE FROM Ingredients WHERE ingredientId = :condition
+DELETE FROM Ingredients WHERE ingredientId = :condition;

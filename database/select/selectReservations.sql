@@ -7,7 +7,7 @@
     : indicates the system stored customerID for querying
 */
 
-SELECT r.reservationID, Rooms.name, r.totalFee, r.reservationTime, r.reservationDuration
+SELECT r.reservationID, Rooms.name, r.totalFee, r.reservationStart, r.reservationEnd
 FROM Reservations r 
 JOIN Rooms ON r.roomID = Rooms.roomID 
 WHERE r.customerID = :customerID;

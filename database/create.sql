@@ -81,8 +81,8 @@ CREATE TABLE Reservations (
     customerID int NOT NULL,
     roomID int NOT NULL,
     totalFee decimal(4,2) NOT NULL,
-    reservationTime datetime NOT NULL,
-    reservationDuration int NOT NULL,
+    reservationStart datetime NOT NULL,
+    reservationEnd datetime NOT NULL,
     PRIMARY KEY (reservationID),
     FOREIGN KEY (customerID) REFERENCES Customers(customerID)
     ON DELETE CASCADE
