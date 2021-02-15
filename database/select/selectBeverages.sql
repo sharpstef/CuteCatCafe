@@ -1,0 +1,10 @@
+/*
+    Query to get all Beverages and their Ingredients.
+    Used in the Admin/Beverages and Menu pages.
+*/
+
+SELECT b.beverageID, b.name, b.description, b.type, b.price, i.name AS ingredient
+FROM Beverages b
+JOIN BeverageIngredients bi ON b.beverageID = bi.beverageID
+JOIN Ingredients i ON bi.ingredientID = i.ingredientID
+ORDER BY b.name ASC;
