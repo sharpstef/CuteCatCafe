@@ -115,7 +115,7 @@ let isAuthenticated = (req,res,next) => {
   if(req.user)
     return next();
   else
-    res.redirect('login', util.updateMenu('/login', context, req.user));
+    res.redirect('/login');
 
 };
 
@@ -124,7 +124,7 @@ let isAuthAdmin = (req,res,next) => {
     if(req.user.isAdmin) {
       return next();
     } else {
-      res.redirect('index', util.updateMenu('/', context, req.user));
+      res.redirect('/');
     }
   }
 };
@@ -199,8 +199,8 @@ app.get('/reservations', (req, res) => {
 // Auth pages
 app.get('/login', (req, res) => {
     let context = {}
-    if(isAuthenticated) {
-      res.redirect('account', util.updateMenu('/', context, req.user));
+    if(req.user) {
+      res.redirect('/account');
     } else {
       res.render('login', util.updateMenu('/login', context, req.user));
     }
@@ -218,8 +218,8 @@ app.post('/login',
 
 app.get('/register', (req, res) => {
     let context = {}
-    if(isAuthenticated) {
-      res.redirect('account', util.updateMenu('/', context, req.user));
+    if(req.user) {
+      res.render('index', util.updateMenu('/', context, req.user));
     } else {
       res.render('register', util.updateMenu('/login', context, req.user));
     }

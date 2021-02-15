@@ -40,6 +40,7 @@
 </div>
 
 <div class="container">
+    {{#if data.orderData}}
     <table class="generic">
     <thead>
         <tr>
@@ -51,7 +52,6 @@
         </tr>
     </thead>
     <tbody>
-        {{#if data.orderData}}
             {{#each data.orderData}}
                 <tr>
                     <input type="hidden" id="orderID" value={{this.orderID}}>
@@ -68,9 +68,11 @@
                     <td><a href="#"><i class="fa fa-times-circle"></i></td>
                 </tr>
             {{/each}}
-        {{/if}}
     </tbody>
     </table>
+    {{else}}
+        <p>You have no orders</p>
+    {{/if}}
 </div>
 
 <div class="container">
@@ -80,6 +82,7 @@
 </div>
 
 <div class="container">
+    {{#if data.resData}}
     <table class="generic">
     <thead>
         <tr>
@@ -91,7 +94,6 @@
         </tr>
     </thead>
     <tbody>
-        {{#if data.resData}}
             {{#each data.resData}}
                 <tr>
                     <td>{{this.name}}</td>
@@ -101,7 +103,9 @@
                     <td><a href="#"><i class="fa fa-times-circle"></i></td>
                 </tr>
             {{/each}}
-        {{/if}}
     </tbody>
     </table>
+    {{else}}
+        <p>You have no reservations</p>
+    {{/if}}
 </div>
