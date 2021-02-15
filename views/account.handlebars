@@ -12,26 +12,25 @@
 </section>
 
 <div class="container">
+    {{#if data.userData}}
     <div class="row">
         <h1 class="centered">Account Information</h1>
     </div>
     <div class="row centered">
-        <div class="col-md-2 col-sm-6">
-            <p><b>First Name:</b> Peter</p>
-        </div>
-        <div class="col-md-2 col-sm-6">
-            <p><b>Last Name:</b> Rabbit</p>
+        <div class="col-md-3 col-sm-6">
+            <p><b>First Name:</b> {{data.userData.firstName}}</p>
         </div>
         <div class="col-md-3 col-sm-6">
-            <p><b>Email:</b> peter.rabbit@foo.bar</p>
+            <p><b>Last Name:</b> {{data.userData.lastName}}</p>
         </div>
         <div class="col-md-3 col-sm-6">
-            <p><b>Password:</b> passw0rd</p>
+            <p><b>Email:</b> {{data.userData.email}}</p>
         </div>
         <div class="col-md-2 col-sm-6">
-            <p><b>Member Type:</b> Member</p>
+            <p><b>Member Type:</b> {{#if data.userData.member}}Member{{/if}} {{#if data.userData.admin}}Admin{{/if}}</p>
         </div>
     </div>
+    {{/if}}
 </div>
 
 <div class="container">
@@ -48,30 +47,28 @@
         <th>Total</th>
         <th>Status</th>
         <th>Items</th>
-        <th>Update</th>
         <th>Remove</th>
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Monday, February 1, 2021 8:09:35 AM</td>
-                <td>$3.50</td>
-                <td>Complete</td>
-                <td>mocha (hot)</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
-            {{#each data}}
-            <tr>
-                <td>{{this.purchaseTime}}</td>
-                <td>{{this.totalAmount}}</td>
-                <td>{{this.complete}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        {{/each}}
-        <!-- {{/if}} -->
+        {{#if data.orderData}}
+            {{#each data.orderData}}
+                <tr>
+                    <input type="hidden" id="orderID" value={{this.orderID}}>
+                    <td>{{this.time}}</td>
+                    <td>${{this.total}}</td>
+                    <td>{{#if this.complete}} Complete {{/if}} </td>
+                    <td>
+                        <ul>
+                            {{#each this.items}}
+                            <li>{{this.name}} ({{this.amount}}) - {{this.status}}</li>
+                            {{/each}}
+                        </ul>
+                    </td>
+                    <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                </tr>
+            {{/each}}
+        {{/if}}
     </tbody>
     </table>
 </div>
@@ -90,32 +87,21 @@
         <th>Total</th>
         <th>Reservation Time</th>
         <th>Length</th>
-        <th>Update</th>
         <th>Remove</th>
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Green Room</td>
-                <td>$30.00</td>
-                <td>Monday, February 1, 2021 8:00:00 AM</td>
-                <td>60 minutes</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
-            {{#each data}}
-            <tr>
-                <td>{{this.name}}</td>
-                <td>{{this.roomDescription}}</td>
-                <td>{{this.reservable}}</td>
-                <td>{{this.fee}}</td>
-                <td>{{this.catID}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        {{/each}}
-        <!-- {{/if}} -->
+        {{#if data.resData}}
+            {{#each data.resData}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>${{this.totalFee}}</td>
+                    <td>{{this.reservationTime}}</td>
+                    <td>{{this.reservationDuration}} minutes</td>
+                    <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                </tr>
+            {{/each}}
+        {{/if}}
     </tbody>
     </table>
 </div>

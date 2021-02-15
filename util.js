@@ -32,7 +32,6 @@ module.exports = {
   updateMenu(active, context, login_status = {}) {
     let menuItems = constants.MENU;
     context = context || {};
-    console.log(context);
 
     menuItems.forEach(function(item, index){
       if (item.REF === active) {
