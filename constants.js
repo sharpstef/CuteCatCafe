@@ -20,5 +20,9 @@ module.exports = Object.freeze({
         REF: '/login',
         CLASS: 'none'
       }
-    ]
+    ],
+    ROLES: {
+      Admin: 'Admin',
+      Member: 'Member'
+    }
 });
