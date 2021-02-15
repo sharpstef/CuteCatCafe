@@ -40,7 +40,7 @@ module.exports = {
         item.CLASS = 'none';
       }
 
-      if(item.NAME === "Login" || item.NAME=== "Logout") {
+      if(item.NAME === "Login" || item.NAME === "Logout") {
         if(login_status && login_status.customerID) {
           item.NAME = "Logout";
           item.REF = "/logout";
@@ -52,6 +52,7 @@ module.exports = {
     });
 
     context.menu_data = menuItems;
+
     return context;
   }
 };

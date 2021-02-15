@@ -30,6 +30,7 @@
 </div>
 
 <div class="container">
+    {{#if data}}
     <table class="generic">
     <thead>
         <tr>
@@ -39,20 +40,16 @@
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Tumeric</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
             {{#each data}}
             <tr>
                 <td>{{this.name}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                <td><i class="fa fa-check-circle"></i></td>
+                <td><i class="fa fa-times-circle"></i></td>
             </tr>
         {{/each}}
-        <!-- {{/if}} -->
     </tbody>
     </table>
+    {{else}}
+        <p>No ingredients in database.</p>
+    {{/if}}
 </div>

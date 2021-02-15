@@ -49,25 +49,25 @@ let Customer = {
      * Only one customer should be returned.
      * 
      * @param {*} email
-     * @param {*} callback
      */
-    findByEmail: (email, callback) => {
+    findByEmail: (email) => {
         let query = 'SELECT * FROM Customers WHERE email=?';
         let values = [email];
 
-        console.info("Querying for record with email: ", email);
-
-        pool.query(query, values, (err, result, fields) => {
-            if (err) {
-                console.error("Unable to find user", email, ". Error JSON:",
-                    JSON.stringify(err, null, 2));
-                return callback(err, null);
-            }
-            if (result.length > 0) {
-                return callback(null, result[0]);
-            } else {
-                return callback(2, null);
-            }
+        return new Promise((resolve, reject) => {
+            console.info("Querying for record with email: ", email);
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to find user", email, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                }
+                if (result.length > 0) {
+                    resolve(result[0]);
+                } else {
+                    resolve(null);
+                }
+            });
         });
     },
 
@@ -77,21 +77,23 @@ let Customer = {
      * @param {*} attributes
      * @param {*} callback
      */
-    findByID: (attributes, callback) => {
+    findByID: (attributes) => {
         let query = 'SELECT * FROM Customers WHERE customerID=?';
         let values = [attributes.id];
 
-        pool.query(query, values, (err, result, fields) => {
-            if (err) {
-                console.error("Unable to find user", attributes.customerID, ". Error JSON:",
-                    JSON.stringify(err, null, 2));
-                return (err, null);
-            }
-            if (result[0]) {
-                return callback(null, result[0]);
-            } else {
-                return callback(2, null);
-            }
+        return new Promise((resolve, reject) => {
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to find user", attributes.customerID, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                }
+                if (result && result[0]) {
+                    resolve(result[0]);
+                } else {
+                    resolve(null);
+                }
+            });
         });
     },
 
@@ -103,27 +105,30 @@ let Customer = {
      * @param {*} password
      * @param {*} callback 
      */
-    createCustomer: (attributes, callback) => {
+    createCustomer: (attributes) => {
         let email = attributes.email;
-        Customer.findByEmail(email, (err, data) => {
-            // Email is a duplicate, reject the create
-            if (data) {
-                return callback(2, null);
+
+        return new Promise(async (resolve, reject) => {
+            let customer = await Customer.findByEmail(emailD).then(result => {
+                return result;
+            }).catch();
+
+            if (customer) {
+                resolve(null);
+            } else {
+                customer = Customer.newCustomer(attributes);
+                let query = 'INSERT INTO Customers SET ?';
+                pool.query(query, customer, (err, result, fields) => {
+                    if (err) {
+                        console.error("Unable to add new customer", customer.email, ". Error JSON:",
+                            JSON.stringify(err, null, 2));
+                        reject(err);
+                    } else {
+                        customer.customerID = result.insertId;
+                        resolve(customer);
+                    }
+                });
             }
-
-            let customer = Customer.newCustomer(attributes);
-            let query = 'INSERT INTO Customers SET ?';
-            pool.query(query, customer, (err, result, fields) => {
-                if (err) {
-                    console.error("Unable to add new customer", customer.email, ". Error JSON:",
-                        JSON.stringify(err, null, 2));
-                    return callback(err, null);
-                } else {
-                    customer.customerID = result.insertId;
-                    return callback(null, customer);
-                }
-            });
-
         });
     },
 
@@ -133,20 +138,20 @@ let Customer = {
      * @param {*} attributes
      * @param {*} callback 
      */
-    saveCustomer: (attributes, callback) => {
+    saveCustomer: (attributes) => {
         let query = 'UPDATE Customers SET ? WHERE customerID=?';
 
         let customer = Customer.newCustomer(attributes);
         let values = [user, attributes.customerID];
 
-        pool.query(query, values, (err, result, fields) => {
-            if (err) {
-                console.error("Unable to update user", user.email, ". Error JSON:",
-                    JSON.stringify(err, null, 2));
-                return callback(err, null);
-            } else {
-                return callback(null, result[0]);
-            }
+        return new Promise((resolve, reject) => {
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result[0]);
+                }
+            });
         });
     },
 

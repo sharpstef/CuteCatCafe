@@ -39,6 +39,7 @@
 </div>
 
 <div class="container">
+    {{#if data}}
     <table class="generic">
     <thead>
         <tr>
@@ -47,36 +48,27 @@
         <th>Age</th>
         <th>Date Admitted</th>
         <th>Adopted</th>
-        <th>Room ID</th>
+        <th>Room</th>
         <th>Update</th>
         <th>Remove</th>
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Fluffy</td>
-                <td>Domestic Shorthair</td>
-                <td>1 year</td>
-                <td>1/10/2021</td>
-                <td>No</td>
-                <td>1</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
-            {{#each data}}
+        {{#each data}}
             <tr>
                 <td>{{this.name}}</td>
                 <td>{{this.breed}}</td>
                 <td>{{this.age}}</td>
                 <td>{{this.dateAdmitted}}</td>
-                <td>{{this.adopted}}</td>
-                <td>{{this.roomID}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                <td>{{#if this.adopted}}Yes {{else}} No {{/if}}</td>
+                <td>{{this.room}}</td>
+                <td><i class="fa fa-check-circle"></i></td>
+                <td><i class="fa fa-times-circle"></i></td>
             </tr>
         {{/each}}
-        <!-- {{/if}} -->
     </tbody>
     </table>
+    {{else}}
+        <p>No cats in database.</p>
+    {{/if}}
 </div>

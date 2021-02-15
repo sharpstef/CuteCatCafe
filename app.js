@@ -14,6 +14,7 @@ const session = require('express-session');
 // Local imports
 const Customer = require('./handlers/customer');
 const Account = require('./handlers/account');
+const Admin = require('./handlers/admin');
 const util = require('./util');
 
 /************************************************************************************************* 
@@ -58,38 +59,39 @@ passport.use(new Strategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, function(req, email, password, done) {
+}, async (req, email, password, done) => {
 
-    Customer.findByEmail(email, function(err, user) {
-        if (err) {
-            req.session.error = "Authentication error. Please try again.";
-            return done(err, false);
-        }
-        if (!user) {
-            req.session.error = "Invalid email or password.";
-            return done(null, false)
-        }
-
+  await Customer.findByEmail(email).then(user => {
+    if (user) {
         const isValid = Customer.validPassword(password, user.password, user.salt);
-
         if (isValid) {
-            return done(null, user);
+          console.info("Login is good!");
+          return done(null, user);
         } else {
             return done(null, false);
         }
-    });
+    } else if (!user) {
+        req.session.error = "Invalid email or password.";
+        return done(null, false)
+    }
+  }).catch(error => {
+      console.error("Error on login: ", error);
+      req.session.error = "Authentication error. Please try again.";
+      return done(err, false);
+  });
 }));
 
 passport.serializeUser((user, cb) => {
-  cb(null, {id: user.customerID});
+    cb(null, {
+        id: user.customerID
+    });
 });
 
-passport.deserializeUser((attributes, cb) => {
-    Customer.findByID(attributes, (err, user) => {
-        if (err) {
-            return cb(err);
-        }
-        cb(null, user);
+passport.deserializeUser(async (attributes, cb) => {
+    await Customer.findByID(attributes).then(user => {
+        return cb(null, user);
+    }).catch(err => {
+      return cb(err);
     });
 });
 
@@ -111,22 +113,23 @@ app.use(function(req, res, next) {
     next();
 });
 
-let isAuthenticated = (req,res,next) => {
-  if(req.user)
-    return next();
-  else
-    res.redirect('/login');
+let isAuthenticated = (req, res, next) => {
+  console.info("checking login");
+    if (req.user)
+        return next();
+    else
+        res.redirect('/login');
 
 };
 
-let isAuthAdmin = (req,res,next) => {
-  if(isAuthenticated) {
-    if(req.user.isAdmin) {
-      return next();
-    } else {
-      res.redirect('/');
+let isAuthAdmin = (req, res, next) => {
+    if (isAuthenticated) {
+        if (req.user.isAdmin) {
+            return next();
+        } else {
+            res.redirect('/');
+        }
     }
-  }
 };
 
 // Index Page
@@ -136,35 +139,51 @@ app.get('/', (req, res) => {
     res.render('index', util.updateMenu('/', context, req.user));
 });
 
-app.get('/account', isAuthenticated, (req, res) => {
-        let context = {};
-        context.data = {};
+app.get('/account', isAuthenticated, async (req, res) => {
+    let context = {};
+    context.data = {};
 
-        if(req.user) {
-        context.data.userData = {
-          firstName: req.user.firstName,
-          lastName: req.user.lastName,
-          email: req.user.email,
-          member: req.user.member,
-          admin: req.user.isAdmin
-        };        
-        Account.getOrdersByCustomer(req.user.customerID, (err, orders) => {
-            context.data.orderData = orders;
+    context.data.userData = {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        member: req.user.member,
+        admin: req.user.isAdmin
+    };
 
-            Account.getReservationsByCustomer(req.user.customerID, (err, reservations) => {
-                context.data.resData = reservations;
-                res.render('account', util.updateMenu('/', context, req.user));
-            });
-        });
-      }
+    await Account.getOrdersByCustomer(req.user.customerID).then(result => {
+        context.data.orderData = result;
+    }).catch(error => {
+        console.error("Error getting Orders: ", error);
+    });
+
+    await Account.getReservationsByCustomer(req.user.customerID).then(result => {
+        context.data.resData = result;
+    }).catch(error => {
+        console.error("Error getting Reservations: ", error);
+    });
+
+    res.render('account', util.updateMenu('/', context, null));
 });
 
-app.get('/beverages', (req, res) => {
-    res.render('beverages', util.updateMenu('/', {}, req.user));
+app.get('/beverages', async (req, res) => {
+  let context = {};
+  await Admin.getBeverages().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Beverages: ", error);
+  });
+  res.render('beverages', util.updateMenu('/', context, req.user));
 });
 
-app.get('/cats', (req, res) => {
-    res.render('cats', util.updateMenu('/', {}, req.user));
+app.get('/cats', async (req, res) => {
+  let context = {};
+  await Admin.getCats().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Cats: ", error);
+  });
+  res.render('cats', util.updateMenu('/', context, req.user));
 });
 
 app.get('/checkout', (req, res) => {
@@ -172,8 +191,14 @@ app.get('/checkout', (req, res) => {
     res.render('checkout', util.updateMenu('/', {}, req.user));
 });
 
-app.get('/ingredients', (req, res) => {
-    res.render('ingredients', util.updateMenu('/', {}, req.user));
+app.get('/ingredients', async (req, res) => {
+  let context = {};
+  await Admin.getIngredients().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Ingredients: ", error);
+  });
+  res.render('ingredients', util.updateMenu('/', context, req.user));
 });
 
 app.get('/menu', (req, res) => {
@@ -181,12 +206,14 @@ app.get('/menu', (req, res) => {
     res.render('menu', util.updateMenu('/menu', context));
 });
 
-app.get('/rooms', (req, res) => {
-    res.render('rooms', util.updateMenu('/', {}, req.user));
-});
-
-app.get('/rooms', (req, res) => {
-    res.render('rooms', util.updateMenu('/', {}, req.user));
+app.get('/rooms', async (req, res) => {
+  let context = {};
+  await Admin.getRooms().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Rooms: ", error);
+  });
+  res.render('rooms', util.updateMenu('/', context, req.user));
 });
 
 app.get('/reservations', (req, res) => {
@@ -197,10 +224,10 @@ app.get('/reservations', (req, res) => {
 // Auth pages
 app.get('/login', (req, res) => {
     let context = {}
-    if(req.user) {
-      res.redirect('/account');
+    if (req.user) {
+        res.redirect('/account');
     } else {
-      res.render('login', util.updateMenu('/login', context, req.user));
+        res.render('login', util.updateMenu('/login', context, req.user));
     }
 });
 
@@ -210,31 +237,32 @@ app.post('/login',
     }),
     (req, res) => {
         let context = {};
-        context.success = "Login success!"
         res.render('index', util.updateMenu('/', context, req.user));
     });
 
 app.get('/register', (req, res) => {
     let context = {}
-    if(req.user) {
-      res.render('index', util.updateMenu('/', context, req.user));
+    if (req.user) {
+        res.render('index', util.updateMenu('/', context, req.user));
     } else {
-      res.render('register', util.updateMenu('/login', context, req.user));
+        res.render('register', util.updateMenu('/login', context, req.user));
     }
 });
 
-app.post('/register', (req, res) => {
-    Customer.createCustomer(req.body, (err, user) => {
-        let context = {};
+app.post('/register', async (req, res) => {
+    let context = {}
+    await Customer.createCustomer(req.body).then(user => {
         if (user && user != null) {
             context.success = "Account created. Please log in."
-        } else if (err === 2) {
+        } else if (user == null) {
             context.error = "Account already exists."
-        } else {
-            context.error = "Account creation failed."
         }
-        res.render('register', util.updateMenu('/login', context, false));
+    }).catch(error => {
+        console.error("Error creating account: ", error);
+        context.error = "Account creation failed."
     });
+
+    res.render('register', util.updateMenu('/login', context, false));
 });
 
 app.get('/logout', (req, res) => {

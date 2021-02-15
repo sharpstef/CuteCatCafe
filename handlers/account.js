@@ -7,9 +7,8 @@ let Account = {
      * Get all Reservations for a given customerID.
      * 
      * @param {*} id
-     * @param {*} callback
      */
-    getReservationsByCustomer: (id, callback) => {
+    getReservationsByCustomer: (id) => {
         let query = `SELECT r.reservationID, Rooms.name, r.totalFee, 
                     r.reservationTime, r.reservationDuration
                     FROM Reservations r 
@@ -19,17 +18,17 @@ let Account = {
 
         console.info("Querying for reservations for customer: ", id);
 
-        pool.query(query, values, (err, result, fields) => {
-            if (err) {
-                console.error("Unable to find reservations. Error JSON:",
-                    JSON.stringify(err, null, 2));
-                return callback(err, null);
-            }
-            if (result.length > 0) {
-                return callback(null, result);
-            } else {
-                return callback(2, null);
-            }
+        return new Promise((resolve, reject) => {
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    reject(err);
+                }
+                if (result && result.length > 0) {
+                    resolve(result);
+                } else {
+                    resolve(null);
+                }
+            });
         });
     },
     /**
@@ -37,9 +36,8 @@ let Account = {
      * and quantity ordered.
      * 
      * @param {*} id
-     * @param {*} callback
      */
-    getOrdersByCustomer: (id, callback) => {
+    getOrdersByCustomer: (id) => {
         let query = `SELECT o.orderID, o.purchaseTime, o.totalAmount, 
         o.complete, b.name, oi.quantity, oi.status
         FROM Orders o
@@ -50,36 +48,34 @@ let Account = {
 
         console.info("Querying for orders for customer: ", id);
 
-        pool.query(query, values, (err, result, fields) => {
-            if (err) {
-                console.error("Unable to find orders. Error JSON:",
-                    JSON.stringify(err, null, 2));
-                return callback(err, null);
-            }
-            if (result.length > 0) {
-                // Prepare the data for the template and add the order items
-                let orders = [];
-                let currentOrder = 0;
-                let order = {};
-                for (let i = 0; i < result.length; i++) {
-                    if(result.orderID != currentOrder) {
-                        if(orders.length == 0 && order.hasOwnProperty("orderID")) {
-                            orders.push(order);
-                        }
-                        order = Account.fillOrderTemplate(result[0]);
-                    } else {
-                        order.items.push(Account.fillItemTemplate(result[i]));
-                    }
-                    currentOrder = result.orderID;
+        return new Promise((resolve, reject) => {
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    reject(err);
                 }
+                if (result && result.length > 0) {
+                    // Prepare the data for the template and add the order items
+                    let orders = [];
+                    let currentOrder = result[0].orderID;
+                    let order = Account.fillOrderTemplate(result[0]);
 
-                if(order.hasOwnProperty("orderID")) {
-                    orders.push(order);
+                    for (let i = 0; i < result.length; i++) {
+                        if(result[i].orderID != currentOrder) {
+                            orders.push(order);
+                            order = Account.fillOrderTemplate(result[i]);
+                        } 
+                        order.items.push(Account.fillItemTemplate(result[i]));
+                        currentOrder = result[i].orderID;
+                    }
+    
+                    if(order.hasOwnProperty("orderID")) {
+                        orders.push(order);
+                    }
+                    resolve(orders);
+                } else {
+                    resolve(null);
                 }
-                return callback(null, orders);
-            } else {
-                return callback(2, null);
-            }
+            });
         });
     },
     fillOrderTemplate: (data) => {

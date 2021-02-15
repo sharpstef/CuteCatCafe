@@ -46,6 +46,7 @@
 </div>
 
 <div class="container">
+    {{#if data}}
     <table class="generic">
     <thead>
         <tr>
@@ -59,16 +60,6 @@
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Tumeric Mocha</td>
-                <td>An odd mocha that shouldn't exist.</td>
-                <td>Hot</td>
-                <td>$3.50</td>
-                <td>tumeric, chocolate</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
             {{#each data}}
             <tr>
                 <td>{{this.name}}</td>
@@ -76,11 +67,13 @@
                 <td>{{this.type}}</td>
                 <td>{{this.price}}</td>
                 <td>{{this.ingredients}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                <td><i class="fa fa-check-circle"></i></td>
+                <td><i class="fa fa-times-circle"></i></td>
             </tr>
         {{/each}}
-        <!-- {{/if}} -->
     </tbody>
     </table>
+    {{else}}
+        <p>No beverages in database.</p>
+    {{/if}}
 </div>

@@ -44,6 +44,7 @@
 </div>
 
 <div class="container">
+    {{#if data}}
     <table class="generic">
     <thead>
         <tr>
@@ -51,34 +52,24 @@
         <th>Description</th>
         <th>Reservable</th>
         <th>Fee</th>
-        <th>Cat ID</th>
-        <th>Update</th>
+        <th>Cat</th>
         <th>Remove</th>
         </tr>
     </thead>
     <tbody>
-            <tr>
-                <td>Green Room</td>
-                <td>A room painted in muted golds with walls of plants.</td>
-                <td>Yes</td>
-                <td>$30.00 per hour</td>
-                <td>1</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
-            </tr>
-        <!--{{#if data}} -->
             {{#each data}}
             <tr>
                 <td>{{this.name}}</td>
                 <td>{{this.roomDescription}}</td>
-                <td>{{this.reservable}}</td>
-                <td>{{this.fee}}</td>
-                <td>{{this.catID}}</td>
-                <td><a href="#"><i class="fa fa-check-circle"></i></td>
-                <td><a href="#"><i class="fa fa-times-circle"></i></td>
+                <td>{{#if this.reservable}}No {{else}} Yes {{/if}}</td>
+                <td>${{this.fee}}.00</td>
+                <td>{{this.cat}}</td>
+                <td><i class="fa fa-times-circle"></i></td>
             </tr>
         {{/each}}
-        <!-- {{/if}} -->
     </tbody>
     </table>
+    {{else}}
+        <p>No rooms in database.</p>
+    {{/if}}
 </div>
