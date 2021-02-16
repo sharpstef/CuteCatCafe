@@ -109,7 +109,7 @@ let Customer = {
         let email = attributes.email;
 
         return new Promise(async (resolve, reject) => {
-            let customer = await Customer.findByEmail(emailD).then(result => {
+            let customer = await Customer.findByEmail(email).then(result => {
                 return result;
             }).catch();
 
@@ -175,7 +175,7 @@ let Customer = {
         customer.member = attributes.hasOwnProperty('member') ? 1 : 0;
         customer.isAdmin = attributes.hasOwnProperty('admin') ? 1 : 0;
 
-        console.info("Preparing to add new customer: ", JSON.stringify(customer));
+        //console.info("Preparing to add new customer: ", JSON.stringify(customer));
 
         return customer;
     }

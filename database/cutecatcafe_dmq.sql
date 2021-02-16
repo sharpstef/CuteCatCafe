@@ -29,7 +29,7 @@ ORDER BY b.name ASC;
 
 SELECT c.catID, c.name, c.breed, c.age, c.dateAdmitted, c.adopted, r.name AS room
 FROM Cats c
-JOIN Rooms r ON c.roomID = r.roomID
+LEFT JOIN Rooms r ON c.roomID = r.roomID
 ORDER BY c.name ASC;
 
 /*
@@ -89,7 +89,7 @@ WHERE r.customerID = :customerID;
 
 SELECT r.roomID, r.name, r.roomDescription, r.reservable, r.fee, c.name AS cat
 FROM Rooms c
-JOIN Cats c ON c.roomID = r.roomID
+LEFT JOIN Cats c ON c.roomID = r.roomID
 ORDER BY r.name ASC;
 
 /*
