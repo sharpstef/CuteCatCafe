@@ -5,7 +5,7 @@
 
 SELECT c.catID, c.name, c.breed, c.age, c.dateAdmitted, c.adopted, r.name AS room
 FROM Cats c
-JOIN Rooms r ON c.roomID = r.roomID
+LEFT JOIN Rooms r ON c.roomID = r.roomID
 ORDER BY c.name ASC;
 
 SELECT c.catID, c.name, c.breed, c.age, c.dateAdmitted, c.adopted
