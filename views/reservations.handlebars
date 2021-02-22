@@ -11,23 +11,64 @@
 </section>
 
 <div class="container">
-  <div id="userform">
-    {{#if error}}
-    <h2 class="error">{{error}}</h2>
-    {{/if}}
-    {{#if success}}
-    <h2 class="success">{{success}}</h2>
-    {{/if}}
-      <div id="reserveForm" class="generic-form" >
-      <h2>Reservation Details</h2>
-      <form action="/reserve" method="post">
-        <label for="room">Room</label><br>	
-        <input type="text" id="room" name="room" required />
-        <label for="date">Date</label><br>	
-        <input type="text" id="date" name="date" required />
-        <label for="time">Time</label><br>	
-        <input type="submit" value="Reserve" />
+      <div id="findRoom" class="generic-form" >
+      <h2>Find Available Rooms</h2>
+      <form id="search">
+        <label for="date">Choose a date for your reservation:</label><br>	
+        <input type="date" id="date" name="date" required />
+        <label for="time">Choose a time for your reservation:</label><br>	
+        <input type="time" id="time" name="time" min="08:00" max="20:00" step="1800" required />
+        <small>The cafe is open 8am to 8pm</small>
+        <label for="duration">How long do you want to book a room for?</label><br>	
+        <select id="duration" name="duration">
+          <option value="30">30 minutes</option>
+          <option value="60">1 hour</option>
+          <option value="90">1 hour 30 minutes</option>
+          <option value="120">2 hours</option>
+          <option value="150">2 hours 30 minutes</option>
+          <option value="180">3 hours</option>
+          <option value="210">3 hours 30 minutes</option>
+          <option value="240">4 hours</option>
+          <option value="480">8 hours</option>
+        </select><br><br>
+        <input type="submit" value="Search" />
       </form>
     </div>
-  </div>
 </div>
+
+<div class="container">
+  <div id="message"></div>
+  <div id="dataList"></div>
+</div>
+
+<script id="data-template" type="text/x-handlebars-template">
+    \{{#if resultData}}
+    <h2>Available Rooms</h2>
+    <table id="dataDetails" class="generic">
+      <thead>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Cat</th>
+        <th>Fee</th>
+        <th></th>
+      </thead>
+      <tbody> 
+        \{{#each resultData}}
+        <tr id="\{{this.roomID}}">
+            <td>\{{this.name}}</td>
+            <td>\{{this.roomDescription}}</td>
+            <td>\{{this.cat}}</td>
+            <td>\{{this.fee}}</td>
+            <td>
+              <button type="submit" value="Reserve" onclick="bookRoom(\{{{json this}}});">Reserve</button>
+            </td>
+        </tr> 
+        \{{/each}}
+      </tbody>
+    </table>
+    \{{/if}}
+  </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/reservations.js"></script>

@@ -10,11 +10,16 @@ const hb = require('express-handlebars');
 const passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 const session = require('express-session');
+const moment = require('moment');
 
-// Local imports
+// Handlers for database entities
+const Beverage = require('./handlers/beverage');
+const Cat = require('./handlers/cat');
 const Customer = require('./handlers/customer');
-const Account = require('./handlers/account');
-const Admin = require('./handlers/admin');
+const Reservation = require('./handlers/reservation');
+const Room = require('./handlers/room');
+
+// Helpers
 const util = require('./util');
 
 /************************************************************************************************* 
@@ -65,7 +70,6 @@ passport.use(new Strategy({
     if (user) {
         const isValid = Customer.validPassword(password, user.password, user.salt);
         if (isValid) {
-          console.info("Login is good!");
           return done(null, user);
         } else {
             return done(null, false);
@@ -114,7 +118,6 @@ app.use(function(req, res, next) {
 });
 
 let isAuthenticated = (req, res, next) => {
-  console.info("checking login");
     if (req.user)
         return next();
     else
@@ -135,93 +138,14 @@ let isAuthAdmin = (req, res, next) => {
 // Index Page
 app.get('/', (req, res) => {
     let context = {};
-    console.info(req.user);
     res.render('index', util.updateMenu('/', context, req.user));
 });
 
-app.get('/account', isAuthenticated, async (req, res) => {
-    let context = {};
-    context.data = {};
-
-    context.data.userData = {
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        email: req.user.email,
-        member: req.user.member,
-        admin: req.user.isAdmin
-    };
-
-    await Account.getOrdersByCustomer(req.user.customerID).then(result => {
-        context.data.orderData = result;
-    }).catch(error => {
-        console.error("Error getting Orders: ", error);
-    });
-
-    await Account.getReservationsByCustomer(req.user.customerID).then(result => {
-        context.data.resData = result;
-    }).catch(error => {
-        console.error("Error getting Reservations: ", error);
-    });
-
-    res.render('account', util.updateMenu('/', context, null));
-});
-
-app.get('/beverages', async (req, res) => {
-  let context = {};
-  await Admin.getBeverages().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Beverages: ", error);
-  });
-  res.render('beverages', util.updateMenu('/', context, req.user));
-});
-
-app.get('/cats', async (req, res) => {
-  let context = {};
-  await Admin.getCats().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Cats: ", error);
-  });
-  res.render('cats', util.updateMenu('/', context, req.user));
-});
-
-app.get('/checkout', (req, res) => {
-    let context = {}
-    res.render('checkout', util.updateMenu('/', {}, req.user));
-});
-
-app.get('/ingredients', async (req, res) => {
-  let context = {};
-  await Admin.getIngredients().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Ingredients: ", error);
-  });
-  res.render('ingredients', util.updateMenu('/', context, req.user));
-});
-
-app.get('/menu', (req, res) => {
-    let context = {}
-    res.render('menu', util.updateMenu('/menu', context));
-});
-
-app.get('/rooms', async (req, res) => {
-  let context = {};
-  await Admin.getRooms().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Rooms: ", error);
-  });
-  res.render('rooms', util.updateMenu('/', context, req.user));
-});
-
-app.get('/reservations', (req, res) => {
-    let context = {}
-    res.render('reservations', util.updateMenu('/reservations', context, req.user));
-});
-
-// Auth pages
+/**
+ * 
+ * User Authentication and Account Information
+ * 
+ */
 app.get('/login', (req, res) => {
     let context = {}
     if (req.user) {
@@ -270,11 +194,159 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+app.get('/account', isAuthenticated, async (req, res) => {
+    let context = {};
+    context.data = {};
+
+    context.data.userData = {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        member: req.user.member,
+        admin: req.user.isAdmin
+    };
+
+    await Customer.getOrdersByCustomer(req.user.customerID).then(result => {
+        context.data.orderData = result;
+    }).catch(error => {
+        console.error("Error getting Orders: ", error);
+    });
+
+    await Customer.getReservationsByCustomer(req.user.customerID).then(result => {
+        context.data.resData = result;
+    }).catch(error => {
+        console.error("Error getting Reservations: ", error);
+    });
+
+    res.render('account', util.updateMenu('/', context, null));
+});
+
+/**
+ * 
+ * Inventory Management: Beverages, Cats, Ingredients, Rooms
+ * 
+ */
 app.get('/admin', (req, res) => {
     res.render('admin', util.updateMenu('/', {}));
 });
 
-// 404 page render
+app.get('/beverages', async (req, res) => {
+  let context = {};
+  await Beverage.getBeverages().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Beverages: ", error);
+  });
+  res.render('beverages', util.updateMenu('/', context, req.user));
+});
+
+app.get('/cats', async (req, res) => {
+  let context = {};
+  await Cat.getCats().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Cats: ", error);
+  });
+  res.render('cats', util.updateMenu('/', context, req.user));
+});
+
+app.get('/ingredients', async (req, res) => {
+  let context = {};
+  await Beverage.getIngredients().then(result => {
+    context.data = result;
+  }).catch(error => {
+      console.error("Error getting Ingredients: ", error);
+  });
+  res.render('ingredients', util.updateMenu('/', context, req.user));
+});
+
+app.get('/rooms', async (req, res) => {
+    let context = {};
+    await Room.getRooms().then(result => {
+      context.data = result;
+    }).catch(error => {
+        console.error("Error getting Rooms: ", error);
+    });
+    res.render('rooms', util.updateMenu('/', context, req.user));
+});
+
+/**
+ * 
+ * Menu and Checkout
+ * 
+ */
+app.get('/menu', (req, res) => {
+    let context = {}
+    res.render('menu', util.updateMenu('/menu', context));
+});
+
+app.get('/checkout', (req, res) => {
+    let context = {}
+    res.render('checkout', util.updateMenu('/', {}, req.user));
+});
+
+/**
+ * 
+ * Reservation Booking
+ * 
+ */
+app.get('/reservations', isAuthenticated, (req, res) => {
+    let context = {}
+    res.render('reservations', util.updateMenu('/reservations', context, req.user));
+});
+
+app.post('/reservations', async (req, res) => {
+    let startTime = moment(`${req.body.date} ${req.body.time}`, 'YYYY-MM-DD HH:mm:ss').format();
+    startTime = new Date(startTime);
+    let endTime = startTime;
+    endTime.setMinutes(endTime.getMinutes() + parseInt(req.body.duration));   
+    console.info(startTime);
+    console.info(endTime);
+
+    // Check if time falls our of range and fail
+    if((endTime.getHours() < 8 || endTime.getHours() > 20) || 
+    (startTime.getHours() < 8 || startTime.getHours() > 20)) {
+        res.status(200).send({
+            message: 'No available rooms. Please try again.'
+        });
+    }
+
+    await Reservation.getAvailableRooms(startTime, endTime).then(result => {
+        if(result) {
+            result.forEach(item => {
+                item["reservationStart"] = startTime;
+                item["reservationEnd"] = endTime;
+                item["totalFee"] = item.fee * (parseInt(req.body.duration)/30);
+            });
+        }
+        res.status(200).json({"data": result, "search": req.body});
+    }).catch(error => {
+        console.error("Error getting Rooms: ", error);
+        res.status(500).send({
+            message: 'Error getting available rooms. Try again.'
+        });
+    });    
+});
+
+app.post('/newReservation', isAuthenticated, async (req, res) => {
+    let attributes = req.body;
+    attributes.customerID = req.user.customerID;
+
+    await Reservation.createReservation(attributes).then(result => {
+        res.status(200).json({"message": "Room booked!"});
+    }).catch(error => {
+        console.error("Error creating Reservation: ", error);
+        res.status(500).send({
+            message: 'Error creating reservation. Try again.'
+        });
+    });  
+});
+
+/**
+ * 
+ * Util Pages
+ * 
+ */
 app.use((req, res) => {
     res.status(404);
     let context = {};

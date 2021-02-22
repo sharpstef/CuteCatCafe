@@ -17,10 +17,11 @@ ORDER BY r.name ASC;
     : indicates user provided dateTime
 */
 
-SELECT r.roomID, r.name, r.roomDescription, r.reservable, r.fee
+SELECT DISTINCT(r.roomID), r.name, r.roomDescription, r.fee, c.name AS cat
 FROM Rooms r
-JOIN Reservations res ON r.roomID = res.roomID
+JOIN Cats c ON c.catID = r.catID
+LEFT JOIN Reservations res ON r.roomID = res.roomID
 WHERE r.reservable = 1
-AND res.reservationStart NOT BETWEEN :startTime AND :endTime
-AND res.reservationEnd NOT BETWEEN :startTime AND :endTime
+AND res.reservationStart NOT BETWEEN ? AND ?
+AND res.reservationEnd NOT BETWEEN ? AND ?
 ORDER BY r.name ASC;

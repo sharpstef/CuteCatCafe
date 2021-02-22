@@ -1,60 +1,7 @@
-const util = require('../util');
 const pool = require('../connect');
 
 
-let Admin = {
-    /**
-     * Get all Cats 
-     * 
-     */
-    getCats: () => {
-        let query = `SELECT c.catID, c.name, c.breed, c.age, c.dateAdmitted,
-                    c.adopted, r.name AS room
-                    FROM Cats c
-                    LEFT JOIN Rooms r ON c.roomID = r.roomID
-                    ORDER BY c.name ASC`;
-        
-        return new Promise((resolve, reject) => {
-            pool.query(query, (err, result, fields) => {
-                if (err) {
-                    console.error("Unable to get Cats. Error JSON:",
-                        JSON.stringify(err, null, 2));
-                    reject(err);
-                }
-                if (result && result.length > 0) {
-                    resolve(result);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-    },
-    /**
-     * Get all Rooms
-     * 
-     */
-    getRooms: () => {
-        let query = `SELECT r.roomID, r.name, r.roomDescription,
-                    r.reservable, r.fee, c.name AS cat
-                    FROM Rooms r
-                    LEFT JOIN Cats c ON c.roomID = r.roomID
-                    ORDER BY r.name ASC`;
-
-        return new Promise((resolve, reject) => {
-            pool.query(query, (err, result, fields) => {
-                if (err) {
-                    console.error("Unable to get Rooms. Error JSON:",
-                        JSON.stringify(err, null, 2));
-                    reject(err);
-                }
-                if (result && result.length > 0) {
-                    resolve(result);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-    },
+let Beverage = {
     /**
      * Get all Ingredients
      * 
@@ -138,4 +85,4 @@ let Admin = {
     }
 };
 
-module.exports = Admin;
+module.exports = Beverage;

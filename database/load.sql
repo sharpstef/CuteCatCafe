@@ -51,7 +51,7 @@ SET catID = (SELECT catID FROM Cats WHERE name = 'Boris'), reservable = 1
 WHERE name = 'Green Room';
 
 -- Link Rooms to Customers for Reservations
-INSERT INTO Reservations (customerID, roomID, totalFee, reservationTime, reservationDuration)
+INSERT INTO Reservations (customerID, roomID, totalFee, reservationStart, reservationEnd)
 VALUES
 ((SELECT customerID FROM Customers WHERE firstName='Maeve' AND lastName='Smith'), (SELECT roomID FROM Rooms WHERE name='Yellow Room'), 20.00, '2021-02-15 12:00:00', '2021-02-15 14:00:00'),
 ((SELECT customerID FROM Customers WHERE firstName='Yu' AND lastName='Han'), (SELECT roomID FROM Rooms WHERE name='Yellow Room'), 10.00, '2021-02-15 15:00:00', '2021-02-15 13:00:00'),
