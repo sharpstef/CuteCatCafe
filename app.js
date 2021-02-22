@@ -296,21 +296,21 @@ app.get('/reservations', isAuthenticated, (req, res) => {
 });
 
 app.post('/reservations', async (req, res) => {
-    let startTime = moment(`${req.body.date} ${req.body.time}`, 'YYYY-MM-DD HH:mm:ss').format();
-    startTime = new Date(startTime);
-    let endTime = startTime;
+    let startTime = `${req.body.date} ${req.body.time}`;
+    let endTime = new Date(startTime);
     endTime.setMinutes(endTime.getMinutes() + parseInt(req.body.duration));   
-    console.info(startTime);
-    console.info(endTime);
 
-    // Check if time falls our of range and fail
-    if((endTime.getHours() < 8 || endTime.getHours() > 20) || 
-    (startTime.getHours() < 8 || startTime.getHours() > 20)) {
+    // Check if time falls out of range and fail
+    let sTest = new Date(startTime);
+    if((endTime.getHours() < 8 || endTime.getHours() > 20 || (endTime.getHours() == 20 && endTime.getSeconds() > 1)) || 
+    (sTest.getHours() < 8 || sTest.getHours() > 20 || (sTest.getHours() == 20 && sTest.getSeconds() > 1))) {
         res.status(200).send({
             message: 'No available rooms. Please try again.'
         });
     }
 
+    endTime = `${endTime.getFullYear()}-${('0' + endTime.getMonth()+1).slice(-2)}-${('0' + endTime.getDate()).slice(-2)} ${('0' + endTime.getHours()).slice(-2)}:${('0' + endTime.getSeconds()).slice(-2)}:00`;
+    console.info(`${startTime} ${endTime}`);
     await Reservation.getAvailableRooms(startTime, endTime).then(result => {
         if(result) {
             result.forEach(item => {

@@ -98,6 +98,6 @@ function bookRoom(data) {
  */
 function resetForm() {
     document.getElementById("date").setAttribute("value", today);
-    document.getElementById("time").setAttribute("value", `${today.getHours}:${today.getSeconds}`);
+    document.getElementById("time").setAttribute("value", `${today.getHours}:${today.getSeconds}:00`);
     document.getElementById("duration").setAttribute("value", "30");
 }

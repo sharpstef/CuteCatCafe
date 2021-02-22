@@ -8,14 +8,22 @@ let Reservation = {
      * @param {*} startTime 
      * @param {*} endTime 
      */
-    getAvailableRooms: (startTime, endTime) => {    
-        let query = `SELECT DISTINCT(r.roomID), r.name, r.roomDescription, r.fee, c.name AS cat
+    getAvailableRooms: (startTime, endTime) => {   
+
+        let query = `SELECT r.roomID, r.name, r.roomDescription, r.fee, c.name AS cat
                     FROM Rooms r
                     JOIN Cats c ON c.catID = r.catID
-                    LEFT JOIN Reservations res ON r.roomID = res.roomID
                     WHERE r.reservable = 1
-                    AND res.reservationStart NOT BETWEEN CAST(? AS DATETIME) AND CAST(? AS DATETIME)
-                    AND res.reservationEnd NOT BETWEEN CAST(? AS DATETIME) AND CAST(? AS DATETIME)
+                    AND r.roomID NOT IN (
+                        SELECT roomID
+                        FROM Reservations 
+                        WHERE reservationStart 
+                        BETWEEN ?
+                        AND ?
+                        AND reservationEnd 
+                        BETWEEN ?
+                        AND ?
+                    )
                     ORDER BY r.name ASC;`;
         let values = [startTime, endTime, startTime, endTime];
 

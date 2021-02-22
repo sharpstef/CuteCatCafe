@@ -20,8 +20,15 @@ ORDER BY r.name ASC;
 SELECT DISTINCT(r.roomID), r.name, r.roomDescription, r.fee, c.name AS cat
 FROM Rooms r
 JOIN Cats c ON c.catID = r.catID
-LEFT JOIN Reservations res ON r.roomID = res.roomID
 WHERE r.reservable = 1
-AND res.reservationStart NOT BETWEEN ? AND ?
-AND res.reservationEnd NOT BETWEEN ? AND ?
+AND r.roomID NOT IN (
+    SELECT roomID
+    FROM Reservations 
+    WHERE reservationStart 
+    BETWEEN ?
+    AND ?
+    AND reservationEnd 
+    BETWEEN ?
+    AND ?
+)
 ORDER BY r.name ASC;
