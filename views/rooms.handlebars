@@ -12,31 +12,20 @@
 
 <div class="container">
   <div id="userform">
-    {{#if error}}
-    <h2 class="error">{{error}}</h2>
-    {{/if}}
-    {{#if success}}
-    <h2 class="success">{{success}}</h2>
-    {{/if}}
-      <div id="roomForm" class="generic-form" >
+      <div id="message"></div>
+      <div id="roomForm" class="generic-form">
       <h2>Add Room</h2>
-      <form action="/addRoom" method="post">
+      <form id="add">
         <label for="name">Name</label><br>	
         <input type="text" id="name" name="name" required />
         <label for="description">Description</label><br>	
         <input type="text" id="description" name="description" required />
-        <label for="price">Fee</label><br>	
-        <input type="number" id="price" name="price" required />
-        <label for="cat-search">Cat:</label>
-        <input type="search" id="cat-search" name="q"
-            aria-label="Search for cat" placeholder="Find cat"> <br>
-        <fieldset>
-            <legend> Reservable: </legend>
-            <input type="radio" id="yes" name="type" value="yes">
-            <label for="yes">Yes</label>
-            <input type="radio" id="no" name="type" value="no">
-            <label for="no">No</label>
-        </fieldset>
+        <label for="fee">Fee</label><br>	
+        <input type="number" id="fee" name="fee" min="10" step="0.01" required />
+        <label for="cat">Assigned cat:</label>
+        <select id="cat" name="cat">
+            <option value="" disable selected>Select Cat</option>
+        </select><br><br>
         <input type="submit" value="Add" />
       </form>
     </div>
@@ -44,9 +33,15 @@
 </div>
 
 <div class="container">
-    {{#if data}}
-    <table class="generic">
-    <thead>
+  <div id="message"></div>
+  <div id="dataList"></div>
+</div>
+
+<script id="data-template" type="text/x-handlebars-template">
+    \{{#if resultData}}
+    <h2>Rooms in Cafe</h2>
+    <table id="dataDetails" class="generic">
+      <thead>
         <tr>
         <th>Name</th>
         <th>Description</th>
@@ -55,21 +50,25 @@
         <th>Cat</th>
         <th>Remove</th>
         </tr>
-    </thead>
-    <tbody>
-            {{#each data}}
-            <tr>
-                <td>{{this.name}}</td>
-                <td>{{this.roomDescription}}</td>
-                <td>{{#if this.reservable}}Yes {{else}} No {{/if}}</td>
-                <td>${{this.fee}}.00 per half hour</td>
-                <td>{{this.cat}}</td>
+      </thead>
+      <tbody> 
+        \{{#each resultData}}
+            <tr id="\{{this.roomID}}">
+                <td>\{{this.name}}</td>
+                <td>\{{this.roomDescription}}</td>
+                <td>\{{#if this.reservable}}Yes \{{else}} No \{{/if}}</td>
+                <td>$\{{this.fee}}.00 per half hour</td>
+                <td>\{{this.cat}}</td>
                 <td><i class="fa fa-times-circle"></i></td>
             </tr>
-        {{/each}}
-    </tbody>
+        \{{/each}}
+      </tbody>
     </table>
-    {{else}}
+    \{{else}}
         <p>No rooms in database.</p>
-    {{/if}}
-</div>
+    \{{/if}}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/rooms.js"></script>

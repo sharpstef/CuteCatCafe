@@ -45,6 +45,7 @@ function formUpdate(e) {
 
         if (response.data) {
             createTable(response.data);
+            document.getElementById("dataList").scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         if (response.message) {

@@ -240,14 +240,50 @@ app.get('/beverages', async (req, res) => {
   res.render('beverages', util.updateMenu('/', context, req.user));
 });
 
-app.get('/cats', async (req, res) => {
+app.get('/cats', (req, res) => {
   let context = {};
-  await Cat.getCats().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Cats: ", error);
-  });
   res.render('cats', util.updateMenu('/', context, req.user));
+});
+
+app.get('/getCats', async(req,res) => {
+    await Cat.getCats().then(result => {
+        res.status(200).json({"data": result});
+    }).catch(error => {
+        console.error("Error getting Cats: ", error);
+        res.status(500).send({
+            message: 'Error getting empty rooms.'
+        });
+    });
+});
+
+app.get('/getAvailableCats', async(req,res) => {
+    await Cat.getAvailableCats().then(result => {
+        res.status(200).json({"cats": result});
+    }).catch(error => {
+        console.error("Error getting Cats: ", error);
+        res.status(500).send({
+            message: 'Error getting empty rooms.'
+        });
+    });
+});
+
+app.post('/addCat', async(req,res) => {
+    await Cat.addCat(req.body).then(result => {
+    }).catch(error => {
+        console.error("Error adding Cat: ", error);
+        res.status(500).send({
+            message: 'Error adding new cat. Try again.'
+        });
+    });  
+
+    await Cat.getCats().then(result => {
+        res.status(200).json({"data": result, "message": "Cat added to records."});
+    }).catch(error => {
+        console.error("Error getting Cats: ", error);
+        res.status(500).send({
+            message: 'Error getting cats.'
+        });
+    });
 });
 
 app.get('/ingredients', async (req, res) => {
@@ -262,12 +298,52 @@ app.get('/ingredients', async (req, res) => {
 
 app.get('/rooms', async (req, res) => {
     let context = {};
+    res.render('rooms', util.updateMenu('/', context, req.user));
+});
+
+app.get('/getRooms', async(req,res) => {
     await Room.getRooms().then(result => {
-      context.data = result;
+        res.status(200).json({"data": result});
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
+        res.status(500).send({
+            message: 'Error getting rooms.'
+        });
     });
-    res.render('rooms', util.updateMenu('/', context, req.user));
+});
+
+app.get('/getEmptyRooms', async (req, res) => {
+    await Room.getEmptyRooms().then(result => {
+      res.status(200).json({"rooms": result});
+    }).catch(error => {
+        console.error("Error getting Rooms: ", error);
+        res.status(500).send({
+            message: 'Error getting empty rooms.'
+        });
+    });
+});
+
+app.post('/addRoom', async(req,res) => {
+    await Room.addRoom(req.body).then(result => {
+    }).catch(error => {
+        console.error("Error adding Room: ", error);
+        let message = "Error adding new room. Try again."
+        if(error.code === "ER_DUP_ENTRY") {
+            message = "Error adding room. Room name must be unique."
+        }
+        res.status(500).send({
+            message: message
+        });
+    });  
+
+    await Room.getRooms().then(result => {
+        res.status(200).json({"data": result, "message": "Room added to records."});
+    }).catch(error => {
+        console.error("Error getting Rooms: ", error);
+        res.status(500).send({
+            message: 'Error getting rooms.'
+        });
+    });
 });
 
 /**
@@ -328,7 +404,7 @@ app.post('/reservations', async (req, res) => {
     });    
 });
 
-app.post('/newReservation', isAuthenticated, async (req, res) => {
+app.post('/newReservation', async (req, res) => {
     let attributes = req.body;
     attributes.customerID = req.user.customerID;
 

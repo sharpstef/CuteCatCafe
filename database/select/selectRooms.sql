@@ -12,6 +12,14 @@ LEFT JOIN Cats c ON c.roomID = r.roomID
 ORDER BY r.name ASC;
 
 /*
+    Query to get empty rooms for assigning cats.
+*/
+SELECT r.roomID, r.name as room
+FROM Rooms r
+WHERE r.catID IS NULL
+ORDER BY r.name ASC;
+
+/*
     Query to get all rooms that are not booked for a given date/time.
 
     : indicates user provided dateTime

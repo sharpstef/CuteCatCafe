@@ -13,7 +13,6 @@ function createTable(data) {
 
     let container = document.getElementById("dataList");
     container.innerHTML = newTable;
-    document.getElementById("dataList").scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function removeTable() {
@@ -32,4 +31,25 @@ function updateMessage(status, message) {
 
 function clearMessage() {
     document.getElementById("message").innerHTML = "";
+}
+
+/**
+ * Helper to throttle the dropdown query load for dynamic content.
+ * 
+ * Referenced from: https://codeburst.io/throttling-and-debouncing-in-javascript-646d076d0a44
+ * Last access: 2/22/2020
+ * 
+ * @param {*} delay 
+ * @param {*} fn 
+ */
+function throttled(delay, fn) {
+    let lastCall = 0;
+    return function (...args) {
+      const now = (new Date).getTime();
+      if (now - lastCall < delay) {
+        return;
+      }
+      lastCall = now;
+      return fn(...args);
+    }
 }

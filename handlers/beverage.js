@@ -49,13 +49,13 @@ let Beverage = {
                     // Prepare the data for the template and add the ingredients
                     let beverages = [];
                     let currentBeverage = result[0].beverageID;
-                    let beverage = Admin.fillBeverageTemplate(result[0]);
+                    let beverage = Beverage.fillBeverageTemplate(result[0]);
     
                     for (let i = 0; i < result.length; i++) {
                         if(result[i].beverageID != currentBeverage) {
                             beverage.ingredients.join();
                             beverages.push(beverage);
-                            beverage = Admin.fillBeverageTemplate(result[i]);
+                            beverage = Beverage.fillBeverageTemplate(result[i]);
                         } 
                         beverage.ingredients.push(result[i].ingredient);
                         currentBeverage = result[i].beverageID;
