@@ -11,44 +11,46 @@
 </section>
 
 <div class="container">
-  <div id="userform">
-    {{#if error}}
-    <h2 class="error">{{error}}</h2>
-    {{/if}}
-    {{#if success}}
-    <h2 class="success">{{success}}</h2>
-    {{/if}}
-      <div id="beverageForm" class="generic-form" >
+      <div id="message"></div>
+      <div id="beverageForm" class="generic-form">
       <h2>Add Beverage</h2>
-      <form action="/addBeverage" method="post">
+      <form id="add">
         <label for="name">Name</label><br>	
         <input type="text" id="name" name="name" required />
         <label for="description">Description</label><br>	
         <input type="text" id="description" name="description" required />
         <label for="price">Price</label><br>	
-        <input type="number" id="price" name="price" required />
-        <fieldset>
-            <legend> Type: </legend>
-            <input type="radio" id="hot" name="type" value="hot">
-            <label for="hot">Hot</label>
-            <input type="radio" id="cold" name="type" value="cold">
-            <label for="cold">Cold</label>
-            <input type="radio" id="blended" name="type" value="blended">
-            <label for="blended">Blended</label><br>
-        </fieldset>
-        <label for="ing-search">Ingredients:</label>
-        <input type="search" id="ing-search" name="q"
-            aria-label="Search for ingredients" placeholder="Search for ingredients"> <br>
+        <input type="number" id="price" name="price" min="1" step="0.01" required />
+        <label>Type:</label>
+        <select id="type" name="type">
+            <option value="" disable selected>Select a Type</option>
+            <option value="hot">Hot</option>
+            <option value="cold">Cold</option>
+            <option value="blended">Blended</option>
+        </select><br>
+        <label>Ingredients:</label><br>
+        {{#if ingredientData}}
+            {{#each ingredientData}}
+                <label><input type="checkbox" name="ingredients" value="{{this.ingredientID}}" /> {{this.name}}</label>
+            {{/each}}
+        {{else}}
+            No ingredients
+        {{/if}}<br><br>
         <input type="submit" value="Add" />
       </form>
     </div>
-  </div>
 </div>
 
 <div class="container">
-    {{#if data}}
-    <table class="generic">
-    <thead>
+  <div id="message"></div>
+  <div id="dataList"></div>
+</div>
+
+<script id="data-template" type="text/x-handlebars-template">
+    \{{#if resultData}}
+    <h2>Beverages in Menu</h2>
+    <table id="dataDetails" class="generic">
+      <thead>
         <tr>
             <th>Name</th>
             <th>Description</th>
@@ -58,22 +60,26 @@
             <th>Update</th>
             <th>Delete</th>
         </tr>
-    </thead>
-    <tbody>
-            {{#each data}}
-            <tr>
-                <td>{{this.name}}</td>
-                <td>{{this.description}}</td>
-                <td>{{this.type}}</td>
-                <td>{{this.price}}</td>
-                <td>{{this.ingredients}}</td>
+      </thead>
+      <tbody> 
+        \{{#each resultData}}
+            <tr id="\{{this.beverageID}}">
+                <td>\{{this.name}}</td>
+                <td>\{{this.description}}</td>
+                <td>\{{this.type}}</td>
+                <td>\{{this.price}}</td>
+                <td>\{{this.ingredients}}</td>
                 <td><i class="fa fa-check-circle"></i></td>
                 <td><i class="fa fa-times-circle"></i></td>
             </tr>
-        {{/each}}
-    </tbody>
+        \{{/each}}
+      </tbody>
     </table>
-    {{else}}
+    \{{else}}
         <p>No beverages in database.</p>
-    {{/if}}
-</div>
+    \{{/if}}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/beverages.js"></script>

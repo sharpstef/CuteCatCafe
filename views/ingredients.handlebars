@@ -11,16 +11,10 @@
 </section>
 
 <div class="container">
-  <div id="userform">
-    {{#if error}}
-    <h2 class="error">{{error}}</h2>
-    {{/if}}
-    {{#if success}}
-    <h2 class="success">{{success}}</h2>
-    {{/if}}
-      <div id="ingredientForm" class="generic-form" >
+      <div id="message"></div>
+      <div id="ingredientForm" class="generic-form">
       <h2>Add Ingredient</h2>
-      <form action="/addIngredient" method="post">
+      <form id="add">
         <label for="name">Name</label><br>	
         <input type="text" id="name" name="name" required />
         <input type="submit" value="Add" />
@@ -30,26 +24,36 @@
 </div>
 
 <div class="container">
-    {{#if data}}
-    <table class="generic">
-    <thead>
+  <div id="message"></div>
+  <div id="dataList"></div>
+</div>
+
+<script id="data-template" type="text/x-handlebars-template">
+    \{{#if resultData}}
+    <h2>Available Ingredients</h2>
+    <table id="dataDetails" class="generic">
+      <thead>
         <tr>
-        <th>Name</th>
-        <th>Update</th>
-        <th>Remove</th>
+            <th>Name</th>
+            <th>Update</th>
+            <th>Remove</th>
         </tr>
-    </thead>
-    <tbody>
-            {{#each data}}
-            <tr>
-                <td>{{this.name}}</td>
+      </thead>
+      <tbody> 
+        \{{#each resultData}}
+            <tr id="\{{this.ingredientsID}}">
+                <td>\{{this.name}}</td>
                 <td><i class="fa fa-check-circle"></i></td>
                 <td><i class="fa fa-times-circle"></i></td>
             </tr>
-        {{/each}}
-    </tbody>
+        \{{/each}}
+      </tbody>
     </table>
-    {{else}}
+    \{{else}}
         <p>No ingredients in database.</p>
-    {{/if}}
-</div>
+    \{{/if}}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/ingredients.js"></script>

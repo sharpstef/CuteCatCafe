@@ -27,6 +27,25 @@ let Beverage = {
         });
     },
     /**
+     * Insert a new Ingredient into the database.
+     * 
+     * @param {*} attributes
+     */
+    addIngredient: (attributes) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO Ingredients (name) VALUES (?)';
+            pool.query(query, attributes.name, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to add new ingredient", attributes.name, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                }  else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
      * Get all Beverages
      * 
      */
@@ -34,7 +53,7 @@ let Beverage = {
         let query = `SELECT b.beverageID, b.name, b.description,
                     b.type, b.price, i.name AS ingredient
                     FROM Beverages b
-                    JOIN BeverageIngredients bi ON b.beverageID = bi.beverageID
+                    LEFT JOIN BeverageIngredients bi ON b.beverageID = bi.beverageID
                     JOIN Ingredients i ON bi.ingredientID = i.ingredientID
                     ORDER BY b.name ASC`;
 
@@ -72,6 +91,51 @@ let Beverage = {
                 }
             });
         });
+    },
+    /**
+     * Insert a new Beverage into the database with or without ingredients.
+     * 
+     * @param {*} attributes
+     */
+    addBeverage: (attributes) => {
+        let beverage = Beverage.fillBeverageTemplateInsert(attributes);
+
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO Beverages SET ?';
+            pool.query(query, beverage, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to add new beverage", attributes.name, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                }  else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    insertBeverageIngredients: (ingredient, beverage) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO BeverageIngredients SET ?';
+            let values = [ingredient, beverage];
+
+            pool.query(query, values, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to add ingredient to beverage. Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    fillBeverageTemplateInsert: (data) => {
+        return {
+            name: data.name,
+            description: data.description,
+            type: data.type,
+            price: data.price,
+        };
     },
     fillBeverageTemplate: (data) => {
         return {

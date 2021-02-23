@@ -232,12 +232,58 @@ app.get('/admin', (req, res) => {
 
 app.get('/beverages', async (req, res) => {
   let context = {};
-  await Beverage.getBeverages().then(result => {
-    context.data = result;
+  await Beverage.getIngredients().then(result => {
+    context.ingredientData = result;
   }).catch(error => {
-      console.error("Error getting Beverages: ", error);
+      console.error("Error getting Ingredients: ", error);
   });
   res.render('beverages', util.updateMenu('/', context, req.user));
+});
+
+app.get('/getBeverages', async (req, res) => {
+    await Beverage.getBeverages().then(result => {
+        res.status(200).json({"data": result});
+    }).catch(error => {
+        console.error("Error getting Beverages: ", error);
+        res.status(500).send({
+            message: 'Error getting beverages.'
+        });
+    });
+});
+
+app.post('/addBeverage', async(req,res) => {
+    let beverageID = null;
+
+    await Beverage.addBeverage(req.body).then(result => {
+        beverageID = result.insertId;
+    }).catch(error => {
+        console.error("Error adding Beverage: ", error);
+        res.status(500).send({
+            message: 'Error adding new beverage. Try again.'
+        });
+    });  
+
+    console.info(JSON.stringify(req.body));
+    if(req.body.ingredients) {
+        for(let i=0; i< req.body.ingredients.length; i++) {
+            await Beverage.insertBeverageIngredients(ingredient[i], beverage).then(result => {
+            }).catch(error => {
+                console.error("Error adding Beverage Ingredient: ", error);
+                res.status(500).send({
+                    message: 'Error adding new ingredients to beverage. Update the beverage.'
+                });
+            }); 
+        };
+    } 
+
+    await Beverage.getBeverages().then(result => {
+        res.status(200).json({"data": result, "message": "Beverage added to menu."});
+    }).catch(error => {
+        console.error("Error getting Beverages: ", error);
+        res.status(500).send({
+            message: 'Error getting updated list of beverages.'
+        });
+    });
 });
 
 app.get('/cats', (req, res) => {
@@ -288,12 +334,37 @@ app.post('/addCat', async(req,res) => {
 
 app.get('/ingredients', async (req, res) => {
   let context = {};
-  await Beverage.getIngredients().then(result => {
-    context.data = result;
-  }).catch(error => {
-      console.error("Error getting Ingredients: ", error);
-  });
   res.render('ingredients', util.updateMenu('/', context, req.user));
+});
+
+app.get('/getIngredients', async (req, res) => {
+    await Beverage.getIngredients().then(result => {
+        res.status(200).json({"data": result});
+    }).catch(error => {
+        console.error("Error getting Ingredients: ", error);
+        res.status(500).send({
+            message: 'Error getting ingredients.'
+        });
+    });
+});
+
+app.post('/addIngredient', async(req,res) => {
+    await Beverage.addIngredient(req.body).then(result => {
+    }).catch(error => {
+        console.error("Error adding Ingredient: ", error);
+        res.status(500).send({
+            message: 'Error adding new ingredient. Try again.'
+        });
+    });  
+
+    await Beverage.getIngredients().then(result => {
+        res.status(200).json({"data": result, "message": "Ingredient added to list."});
+    }).catch(error => {
+        console.error("Error getting Ingredients: ", error);
+        res.status(500).send({
+            message: 'Error getting ingredients.'
+        });
+    });
 });
 
 app.get('/rooms', async (req, res) => {
