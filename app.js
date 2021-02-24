@@ -290,6 +290,9 @@ app.post('/addBeverage', async (req, res) => {
 
     await Beverage.addBeverage(req.body).then(result => {
         beverageID = result.insertId;
+        res.status(200).json({
+            "message": "Beverage added to menu."
+        });
     }).catch(error => {
         console.error("Error adding Beverage: ", error);
         let message = "Error adding new beverage. Try again."
@@ -309,18 +312,6 @@ app.post('/addBeverage', async (req, res) => {
             });
         });
     }
-
-    await Beverage.getBeverages().then(result => {
-        res.status(200).json({
-            "data": result,
-            "message": "Beverage added to menu."
-        });
-    }).catch(error => {
-        console.error("Error getting Beverages: ", error);
-        return res.status(500).send({
-            message: 'Error getting updated list of beverages.'
-        });
-    });
 });
 
 app.post('/deleteBeverage', async (req, res) => {
@@ -368,22 +359,27 @@ app.get('/getAvailableCats', async (req, res) => {
 });
 
 app.post('/addCat', async (req, res) => {
-    await Cat.addCat(req.body).then(result => {}).catch(error => {
+    await Cat.addCat(req.body).then(result => {
+        res.status(200).json({
+            "message": "Cat added to records."
+        });
+    }).catch(error => {
         console.error("Error adding Cat: ", error);
         res.status(500).send({
             message: 'Error adding new cat. Try again.'
         });
     });
+});
 
-    await Cat.getCats().then(result => {
+app.post('/deleteCat', async (req, res) => {
+    await Cat.deleteCat(req.body.catID).then(result => {
         res.status(200).json({
-            "data": result,
-            "message": "Cat added to records."
+            message: 'Cat removed from registry!'
         });
     }).catch(error => {
-        console.error("Error getting Cats: ", error);
+        console.error("Error deleting Cat: ", error);
         res.status(500).send({
-            message: 'Error getting cats.'
+            message: 'Error removing cat. Try again later.'
         });
     });
 });
@@ -407,26 +403,35 @@ app.get('/getIngredients', async (req, res) => {
 });
 
 app.post('/addIngredient', async (req, res) => {
-    await Beverage.addIngredient(req.body).then(result => {}).catch(error => {
+    await Beverage.addIngredient(req.body).then(result => {
+        res.status(200).json({
+            "message": "Ingredient added to list."
+        });
+    }).catch(error => {
         console.error("Error adding Ingredient: ", error);
         let message = "Error adding new ingredient. Try again."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding new ingredient. Ingredient name must be unique."
         }
-        return res.status(500).send({
+        res.status(500).send({
             message: message
         });
     });
+});
 
-    await Beverage.getIngredients().then(result => {
+app.post('/updateIngredient', async (req, res) => {
+    await Beverage.updateIngredient(req.body).then(result => {
         res.status(200).json({
-            "data": result,
-            "message": "Ingredient added to list."
+            "message": "Ingredient information updated."
         });
     }).catch(error => {
-        console.error("Error getting Ingredients: ", error);
+        console.error("Error updating Ingredient: ", error);
+        let message = "Error updating ingredient. Try again."
+        if (error.code === "ER_DUP_ENTRY") {
+            message = "Error adding updating ingredient. Ingredient name must be unique."
+        }
         res.status(500).send({
-            message: 'Error getting ingredients.'
+            message: message
         });
     });
 });
@@ -439,7 +444,7 @@ app.post('/deleteIngredient', async (req, res) => {
     }).catch(error => {
         console.error("Error deleting Ingredient: ", error);
         res.status(500).send({
-            message: 'Error removing bingredient. Try again later.'
+            message: 'Error removing ingredient. Try again later.'
         });
     });
 });
@@ -476,7 +481,11 @@ app.get('/getEmptyRooms', async (req, res) => {
 });
 
 app.post('/addRoom', async (req, res) => {
-    await Room.addRoom(req.body).then(result => {}).catch(error => {
+    await Room.addRoom(req.body).then(result => {
+        res.status(200).json({
+            "message": "Room added to records."
+        });
+    }).catch(error => {
         console.error("Error adding Room: ", error);
         let message = "Error adding new room. Try again."
         if (error.code === "ER_DUP_ENTRY") {
@@ -486,16 +495,17 @@ app.post('/addRoom', async (req, res) => {
             message: message
         });
     });
+});
 
-    await Room.getRooms().then(result => {
+app.post('/deleteRoom', async (req, res) => {
+    await Room.deleteRoom(req.body.roomID).then(result => {
         res.status(200).json({
-            "data": result,
-            "message": "Room added to records."
+            message: 'Room removed successfully!'
         });
     }).catch(error => {
-        console.error("Error getting Rooms: ", error);
+        console.error("Error deleting Room: ", error);
         res.status(500).send({
-            message: 'Error getting rooms.'
+            message: 'Error removing room. Try again later.'
         });
     });
 });

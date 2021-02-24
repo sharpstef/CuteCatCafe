@@ -69,14 +69,14 @@ function formUpdate(e) {
     xhr.addEventListener("load", event => {
         let response = JSON.parse(event.target.responseText);
 
-        if (response.data) {
-            createTable(response.data);
-        }
-
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
         document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        if(event.target.status == 200) {
+            getBeverages();
+        }
     });
 
     // Handle error from API

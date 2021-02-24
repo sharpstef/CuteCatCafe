@@ -13,9 +13,11 @@
     <div id="ingredientForm" class="generic-form">
         <h2>Add Ingredient</h2>
         <form id="add">
+            <input type="hidden" id="id" name="id" />
             <label for="name">Name</label><br>	
             <input type="text" id="name" name="name" required />
             <input type="submit" value="Add" />
+            <a href="#" id="reset">Reset</a>
         </form>
     </div>
     <div id="message"></div>
@@ -30,15 +32,15 @@
       <thead>
         <tr>
             <th>Name</th>
-            <th>Update</th>
-            <th>Remove</th>
+            <th></th>
+            <th></th>
         </tr>
       </thead>
       <tbody> 
         \{{#each resultData}}
-            <tr id="\{{this.ingredientsID}}">
+            <tr id="\{{this.ingredientID}}">
                 <td>\{{this.name}}</td>
-                <td><button type="submit" value="Update" onclick="updateIngredient(\{{{json this}}});">Update</button></td>
+                <td><button type="submit" value="Update" onclick="editRow(\{{{json this}}});">Update</button></td>
                 <td><button type="submit" value="Delete" onclick="deleteIngredient(\{{{json this}}});">Delete</button></td>
             </tr>
         \{{/each}}

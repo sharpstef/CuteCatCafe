@@ -46,8 +46,7 @@
         <th>Date Admitted</th>
         <th>Adopted</th>
         <th>Room</th>
-        <th>Update</th>
-        <th>Remove</th>
+        <th></th>
         </tr>
       </thead>
       <tbody> 
@@ -59,8 +58,7 @@
                 <td>\{{this.dateAdmitted}}</td>
                 <td>\{{#if this.adopted}}Yes \{{else}} No \{{/if}}</td>
                 <td>\{{this.room}}</td>
-                <td><i class="fa fa-check-circle"></i></td>
-                <td><i class="fa fa-times-circle"></i></td>
+                <td><button type="submit" value="Delete" onclick="deleteCat(\{{{json this}}});">Delete</button></td>
             </tr>
         \{{/each}}
       </tbody>

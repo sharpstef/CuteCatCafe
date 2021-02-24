@@ -46,6 +46,26 @@ let Beverage = {
         });
     },
     /**
+     * Update name for given ingredient by ingredientID.
+     * 
+     * @param {*} attributes
+     */
+    updateIngredient: (attributes) => {
+        return new Promise((resolve, reject) => {
+            let query = 'UPDATE Ingredients SET name = ? WHERE ingredientID = ?';
+            
+            pool.query(query, [attributes.name, attributes.id], (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to update ingredient", attributes.name, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                }  else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
      * Delete an ingredient given an ingredientID.
      * 
      * @param {*} ingredient

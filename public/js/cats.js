@@ -129,15 +129,14 @@ function formUpdate(e) {
     xhr.addEventListener("load", event => {
         let response = JSON.parse(event.target.responseText);
 
-        if (response.data) {
-            createTable(response.data);
-        }
-
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
-        
         document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        if(event.target.status == 200) {
+            getCats();
+        }
     });
 
     // Handle error from API
@@ -150,6 +149,40 @@ function formUpdate(e) {
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(data));
 };
+
+/**
+ * Helper function to make a delete request to the database and then 
+ * remove the row from the view upon successful deletion. 
+ * 
+ * @param {Object} item 
+ */
+function deleteCat(item) {
+    clearMessage();
+    const xhr = new XMLHttpRequest();
+    // Handle success from API
+    xhr.addEventListener("load", event => {
+        let response = JSON.parse(event.target.responseText);
+        if (response.message) {
+            updateMessage(event.target.status, response.message);
+        }
+        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        if (event.target.status == 200) {
+            getCats();
+        }
+    });
+
+    // Handle error from API
+    xhr.addEventListener("error", event => {
+        console.log(event);
+    });
+
+    // Send POST request to server
+    xhr.open("POST", "/deleteCat", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(item));
+};
+
 
 /**
  * Helper function to reset values in the form. 

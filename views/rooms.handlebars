@@ -43,7 +43,7 @@
         <th>Reservable</th>
         <th>Fee</th>
         <th>Cat</th>
-        <th>Remove</th>
+        <th></th>
         </tr>
       </thead>
       <tbody> 
@@ -54,7 +54,7 @@
                 <td>\{{#if this.reservable}}Yes \{{else}} No \{{/if}}</td>
                 <td>$\{{this.fee}}.00 per half hour</td>
                 <td>\{{this.cat}}</td>
-                <td><i class="fa fa-times-circle"></i></td>
+                <td><button type="submit" value="Delete" onclick="deleteRoom(\{{{json this}}});">Delete</button></td>
             </tr>
         \{{/each}}
       </tbody>

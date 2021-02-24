@@ -11,6 +11,10 @@ let roomList = document.getElementById("dataDetails");
 addForm.addEventListener("submit", getData);
 addForm.addEventListener("formdata", formUpdate);
 
+let reset = document.getElementById("reset");
+
+reset.onclick(resetForm());
+
 /**
  * Event listener handler to populate a new FormData instance.
  * @param {Object} e 
@@ -66,15 +70,18 @@ function formUpdate(e) {
     xhr.addEventListener("load", event => {
         let response = JSON.parse(event.target.responseText);
 
-        if (response.data) {
-            createTable(response.data);
-        }
-
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
 
-        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById("message").scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        if(event.target.status == 200) {
+            getIngredients();
+        }
     });
 
     // Handle error from API
@@ -83,9 +90,31 @@ function formUpdate(e) {
     });
 
     // Send POST request to server
-    xhr.open("POST", "/addIngredient", true);
+    if (data.id && data.id > 0) {
+        xhr.open("POST", "/updateIngredient", true);
+      } else {
+        xhr.open("POST", "/addIngredient", true);
+      }
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(data));
+};
+
+/**
+ * Helper function to populate the form with the data from the row
+ * being edited. Only one row can be edited at a time. 
+ * Drags user view up to the form. 
+ * 
+ * @param {Object} item 
+ */
+function editRow(item) {
+    clearMessage();
+    document.getElementById("id").setAttribute("value", item.ingredientID);
+    document.getElementById("name").setAttribute("value", item.name);
+
+    document.getElementById("ingredientForm").scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
 };
 
 /**
@@ -103,7 +132,10 @@ function deleteIngredient(item) {
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
-        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById("message").scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
 
         if (event.target.status == 200) {
             getIngredients();
@@ -123,7 +155,8 @@ function deleteIngredient(item) {
 
 /**
  * Helper function to reset values in the form. 
-*/
+ */
 function resetForm() {
-    document.getElementById("name").setAttribute("value", "");
+    document.getElementById("id").value = -1;
+    document.getElementById("name").value = "";
 };

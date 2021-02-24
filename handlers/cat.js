@@ -55,6 +55,25 @@ let Cat = {
         });
     },
     /**
+     * Delete a cat given the provided catID.
+     * 
+     * @param {*} cat
+     */
+    deleteCat: (cat) => {
+        return new Promise((resolve, reject) => {
+            let query = 'DELETE FROM Cats WHERE catID = ?';
+            pool.query(query, cat, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to remove cat ", cat, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
      * Insert a new Cat into the database with or without a room.
      * 
      * @param {*} attributes
