@@ -46,6 +46,25 @@ let Beverage = {
         });
     },
     /**
+     * Delete an ingredient given an ingredientID.
+     * 
+     * @param {*} ingredient
+     */
+    deleteIngredient: (ingredient) => {
+        return new Promise((resolve, reject) => {
+            let query = 'DELETE FROM Ingredients WHERE ingredientID = ?';
+            pool.query(query, ingredient, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to remove ingredient ", ingredient, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
      * Get all Beverages
      * 
      */
@@ -113,6 +132,31 @@ let Beverage = {
             });
         });
     },
+    /**
+     * Delete a beverage given the provided beverageID.
+     * 
+     * @param {*} beverage
+     */
+    deleteBeverage: (beverage) => {
+        return new Promise((resolve, reject) => {
+            let query = 'DELETE FROM Beverages WHERE beverageID = ?';
+            pool.query(query, beverage, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to remove beverage ", beverage, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
+     * Add records for each ingredient in a beverage. 
+     * 
+     * @param {*} ingredients 
+     * @param {*} beverage 
+     */
     insertBeverageIngredients: (ingredients, beverage) => {
         let ingredientSet = [];
         for(let i=0; i < ingredients.length; i++) {
@@ -136,6 +180,11 @@ let Beverage = {
             });
         });
     },
+    /**
+     * Helper to format insert data for a new Beverage
+     * 
+     * @param {*} data 
+     */
     fillBeverageTemplateInsert: (data) => {
         return {
             name: data.name,
@@ -144,6 +193,11 @@ let Beverage = {
             price: data.price,
         };
     },
+    /**
+     * Helper to format Beverage data for display on client
+     * 
+     * @param {*} data 
+     */
     fillBeverageTemplate: (data) => {
         return {
             beverageID: data.beverageID,

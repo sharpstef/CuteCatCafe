@@ -1,6 +1,12 @@
+// Helper for Handlebars needed for client side JSON rendering
+Handlebars.registerHelper('json', (context) => {
+    return JSON.stringify(context).replace(/"/g, '&quot;');
+});
+
+
 /**
  * Helper function to populate the Handlebars template on the client
- * with resulot data
+ * with result data
  * 
  * @param {Object} data 
  */

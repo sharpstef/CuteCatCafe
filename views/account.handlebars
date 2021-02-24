@@ -10,7 +10,6 @@
         </div>
     </div>
 </section>
-
 <div class="container">
     {{#if data.userData}}
     <div class="row">
@@ -32,80 +31,83 @@
     </div>
     {{/if}}
 </div>
-
 <div class="container">
     <div class="row">
         <h1 class="centered">Order History</h1>
     </div>
+    <div id="orderHistory"></div>
 </div>
-
 <div class="container">
-    {{#if data.orderData}}
-    <table class="generic">
-    <thead>
+    <div class="row">
+        <h1 class="centered">Reservation History</h1>
+    </div>
+    <div id="resHistory"></div>
+</div>
+<script id="order-template" type="text/x-handlebars-template">
+    \{{#if orderData}}
+    <table id="orderDetails" class="generic">
+      <thead>
         <tr>
         <th>Purchase Date</th>
         <th>Total</th>
         <th>Status</th>
         <th>Items</th>
-        <th>Remove</th>
         </tr>
-    </thead>
-    <tbody>
-            {{#each data.orderData}}
-                <tr>
-                    <input type="hidden" id="orderID" value={{this.orderID}}>
-                    <td>{{this.time}}</td>
-                    <td>${{this.total}}</td>
-                    <td>{{#if this.complete}} Complete {{/if}} </td>
+      </thead>
+      <tbody> 
+        \{{#each orderData}}
+        <tr id="\{{this.orderID}}">
+            <tr>
+                    <td>\{{this.time}}</td>
+                    <td>$\{{this.total}}</td>
+                    <td>\{{#if this.complete}} Complete \{{/if}} </td>
                     <td>
                         <ul>
-                            {{#each this.items}}
-                            <li>{{this.name}} ({{this.amount}}) - {{this.status}}</li>
-                            {{/each}}
+                            \{{#each this.items}}
+                            <li>\{{this.name}} (\{{this.amount}}) - \{{this.status}}</li>
+                            \{{/each}}
                         </ul>
                     </td>
-                    <td><i class="fa fa-times-circle"></i></td>
-                </tr>
-            {{/each}}
-    </tbody>
+            </tr>
+        </tr> 
+        \{{/each}}
+      </tbody>
     </table>
-    {{else}}
+    \{{else}}
         <p>You have no orders</p>
-    {{/if}}
-</div>
-
-<div class="container">
-    <div class="row">
-        <h1 class="centered">Reservation History</h1>
-    </div>
-</div>
-
-<div class="container">
-    {{#if data.resData}}
-    <table class="generic">
-    <thead>
+    \{{/if}}
+</script>
+<script id="res-template" type="text/x-handlebars-template">
+    \{{#if resData}}
+    <div id="message"></div>
+    <table id="resDetails" class="generic">
+      <thead>
         <tr>
         <th>Room</th>
         <th>Total</th>
         <th>Reservation Start</th>
         <th>Reservation End</th>
-        <th>Remove</th>
+        <th></th>
         </tr>
-    </thead>
-    <tbody>
-            {{#each data.resData}}
-                <tr>
-                    <td>{{this.name}}</td>
-                    <td>${{this.totalFee}}</td>
-                    <td>{{this.reservationStart}}</td>
-                    <td>{{this.reservationEnd}}</td>
-                    <td><i class="fa fa-times-circle"></i></td>
-                </tr>
-            {{/each}}
-    </tbody>
+      </thead>
+      <tbody> 
+        \{{#each resData}}
+        <tr id="\{{this.reservationID}}">
+            <tr>
+                <td>\{{this.name}}</td>
+                <td>$\{{this.totalFee}}</td>
+                <td>\{{this.reservationStart}}</td>
+                <td>\{{this.reservationEnd}}</td>
+                <td><button type="submit" value="Delete" onclick="deleteReservation(\{{{json this}}});">Delete</button></td>
+            </tr>
+        </tr> 
+        \{{/each}}
+      </tbody>
     </table>
-    {{else}}
+    \{{else}}
         <p>You have no reservations</p>
-    {{/if}}
-</div>
+    \{{/if}}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/account.js"></script>

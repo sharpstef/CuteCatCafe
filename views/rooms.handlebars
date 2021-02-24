@@ -9,32 +9,29 @@
         </div>
     </div>
 </section>
-
 <div class="container">
-      <div id="message"></div>
-      <div id="roomForm" class="generic-form">
-      <h2>Add Room</h2>
-      <form id="add">
-        <label for="name">Name</label><br>	
-        <input type="text" id="name" name="name" required />
-        <label for="description">Description</label><br>	
-        <input type="text" id="description" name="description" required />
-        <label for="fee">Fee</label><br>	
-        <input type="number" id="fee" name="fee" min="10" step="0.01" required />
-        <label for="cat">Assigned cat:</label>
-        <select id="cat" name="cat">
-            <option value="" disable selected>Select Cat</option>
-        </select><br><br>
-        <input type="submit" value="Add" />
-      </form>
+    <div id="roomForm" class="generic-form">
+        <h2>Add Room</h2>
+        <form id="add">
+            <label for="name">Name</label><br>	
+            <input type="text" id="name" name="name" required />
+            <label for="description">Description</label><br>	
+            <input type="text" id="description" name="description" required />
+            <label for="fee">Fee</label><br>	
+            <input type="number" id="fee" name="fee" min="10" step="0.01" required />
+            <label for="cat">Assigned cat:</label>
+            <select id="cat" name="cat">
+                <option value="" disable selected>Select Cat</option>
+            </select>
+            <br><br>
+            <input type="submit" value="Add" />
+        </form>
     </div>
 </div>
-
 <div class="container">
   <div id="message"></div>
   <div id="dataList"></div>
 </div>
-
 <script id="data-template" type="text/x-handlebars-template">
     \{{#if resultData}}
     <h2>Rooms in Cafe</h2>
@@ -66,7 +63,6 @@
         <p>No rooms in database.</p>
     \{{/if}}
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/rooms.js"></script>

@@ -43,6 +43,25 @@ let Reservation = {
         });
     },
     /**
+     * Delete a reservation given the provided reservation ID.
+     * 
+     * @param {*} reservation
+     */
+    deleteReservation: (reservation) => {
+        return new Promise((resolve, reject) => {
+            let query = 'DELETE FROM Reservations WHERE reservationID = ?';
+            pool.query(query, reservation, (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to remove reservation ", reservation, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
      * Create a new reservation from form data.
      * 
      * @param {*} attributes

@@ -9,37 +9,36 @@
         </div>
     </div>
 </section>
-
 <div class="container">
-  <div id="userform">
-    {{#if error}}
-    <h2 class="error">{{error}}</h2>
-    {{/if}}
-    {{#if success}}
-    <h2 class="success">{{success}}</h2>
-    {{/if}}
-      <div id="registerForm" class="generic-form" >
-      <h2>Create Customer Account</h2>
-      <form action="/register" method="post">
-        <label for="fname">First Name</label><br>	
-        <input type="text" id="fname" name="fname" required />
-        <label for="lname">Last Name</label><br>	
-        <input type="text" id="lname" name="lname" required />
-        <label for="email">Email</label><br>	
-        <input type="text" id="email" name="email" required />
-        <label for="password">Password</label><br>
-        <input type="password" id="password" name="password" required />
-        <label class="checkboxSet">Member
-          <input type="checkbox" id="member" value="member" name="member">
-          <span class="checkmark"></span>
-        </label>
-        <label class="checkboxSet">Admin
-          <input type="checkbox" id="admin" value="admin" name="admin">
-          <span class="checkmark"></span>
-        </label>
-        <input type="submit" value="Register" />
-        <a href="/login" id="login">Login</a>
-      </form>
+    <div id="userform">
+        {{#if error}}
+        <h2 class="error">{{error}}</h2>
+        {{/if}}
+        {{#if success}}
+        <h2 class="success">{{success}}</h2>
+        {{/if}}
+        <div id="registerForm" class="generic-form" >
+            <h2>Create Customer Account</h2>
+            <form action="/register" method="post">
+                <label for="fname">First Name</label><br>	
+                <input type="text" id="fname" name="fname" required />
+                <label for="lname">Last Name</label><br>	
+                <input type="text" id="lname" name="lname" required />
+                <label for="email">Email</label><br>	
+                <input type="text" id="email" name="email" required />
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password" required />
+                <label class="checkboxSet">Member
+                <input type="checkbox" id="member" value="member" name="member">
+                <span class="checkmark"></span>
+                </label>
+                <label class="checkboxSet">Admin
+                <input type="checkbox" id="admin" value="admin" name="admin">
+                <span class="checkmark"></span>
+                </label>
+                <input type="submit" value="Register" />
+                <a href="/login" id="login">Login</a>
+            </form>
+        </div>
     </div>
-  </div>
 </div>

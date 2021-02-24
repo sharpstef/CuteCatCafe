@@ -190,8 +190,6 @@ let Customer = {
                     WHERE r.customerID=?`;
         let values = [id];
 
-        console.info("Querying for reservations for customer: ", id);
-
         return new Promise((resolve, reject) => {
             pool.query(query, values, (err, result, fields) => {
                 if (err) {
@@ -219,8 +217,6 @@ let Customer = {
         JOIN Beverages b ON oi.beverageID = b.beverageID
         WHERE o.customerID = ?`;
         let values = [id];
-
-        console.info("Querying for orders for customer: ", id);
 
         return new Promise((resolve, reject) => {
             pool.query(query, values, (err, result, fields) => {

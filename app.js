@@ -33,10 +33,10 @@ const port = 34400;
 
 app.use(session({
     secret: 'secret squirrel secret',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: {
-        maxAge: 1000 * 30
+        maxAge: 1000 * 60
     }
 }));
 
@@ -66,23 +66,23 @@ passport.use(new Strategy({
     passReqToCallback: true
 }, async (req, email, password, done) => {
 
-  await Customer.findByEmail(email).then(user => {
-    if (user) {
-        const isValid = Customer.validPassword(password, user.password, user.salt);
-        if (isValid) {
-          return done(null, user);
-        } else {
-            return done(null, false);
+    await Customer.findByEmail(email).then(user => {
+        if (user) {
+            const isValid = Customer.validPassword(password, user.password, user.salt);
+            if (isValid) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        } else if (!user) {
+            req.session.error = "Invalid email or password.";
+            return done(null, false)
         }
-    } else if (!user) {
-        req.session.error = "Invalid email or password.";
-        return done(null, false)
-    }
-  }).catch(error => {
-      console.error("Error on login: ", error);
-      req.session.error = "Authentication error. Please try again.";
-      return done(err, false);
-  });
+    }).catch(error => {
+        console.error("Error on login: ", error);
+        req.session.error = "Authentication error. Please try again.";
+        return done(err, false);
+    });
 }));
 
 passport.serializeUser((user, cb) => {
@@ -95,7 +95,7 @@ passport.deserializeUser(async (attributes, cb) => {
     await Customer.findByID(attributes).then(user => {
         return cb(null, user);
     }).catch(err => {
-      return cb(err);
+        return cb(err);
     });
 });
 
@@ -206,19 +206,51 @@ app.get('/account', isAuthenticated, async (req, res) => {
         admin: req.user.isAdmin
     };
 
+    res.render('account', util.updateMenu('/', context, null));
+});
+
+/**
+ * 
+ * Order and Reservation History
+ * 
+ */
+app.get('/getOrders', async (req, res) => {
     await Customer.getOrdersByCustomer(req.user.customerID).then(result => {
-        context.data.orderData = result;
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Orders: ", error);
+        res.status(500).send({
+            message: 'Error getting order history.'
+        });
     });
+});
 
+app.get('/getReservations', async (req, res) => {
     await Customer.getReservationsByCustomer(req.user.customerID).then(result => {
-        context.data.resData = result;
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Reservations: ", error);
+        res.status(500).send({
+            message: 'Error getting reservation history.'
+        });
     });
+});
 
-    res.render('account', util.updateMenu('/', context, null));
+app.post('/deleteReservation', async (req, res) => {
+    await Reservation.deleteReservation(req.body.reservationID).then(result => {
+        res.status(200).json({
+            message: 'Reservation deleted!'
+        });
+    }).catch(error => {
+        console.error("Error deleting Reservation: ", error);
+        res.status(500).send({
+            message: 'Error removing reservation. Try again later.'
+        });
+    });
 });
 
 /**
@@ -231,18 +263,20 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/beverages', async (req, res) => {
-  let context = {};
-  await Beverage.getIngredients().then(result => {
-    context.ingredientData = result;
-  }).catch(error => {
-      console.error("Error getting Ingredients: ", error);
-  });
-  res.render('beverages', util.updateMenu('/', context, req.user));
+    let context = {};
+    await Beverage.getIngredients().then(result => {
+        context.ingredientData = result;
+    }).catch(error => {
+        console.error("Error getting Ingredients: ", error);
+    });
+    res.render('beverages', util.updateMenu('/', context, req.user));
 });
 
 app.get('/getBeverages', async (req, res) => {
     await Beverage.getBeverages().then(result => {
-        res.status(200).json({"data": result});
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Beverages: ", error);
         res.status(500).send({
@@ -251,7 +285,7 @@ app.get('/getBeverages', async (req, res) => {
     });
 });
 
-app.post('/addBeverage', async(req,res) => {
+app.post('/addBeverage', async (req, res) => {
     let beverageID = null;
 
     await Beverage.addBeverage(req.body).then(result => {
@@ -259,26 +293,28 @@ app.post('/addBeverage', async(req,res) => {
     }).catch(error => {
         console.error("Error adding Beverage: ", error);
         let message = "Error adding new beverage. Try again."
-        if(error.code === "ER_DUP_ENTRY") {
+        if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding new beverage. Beverage name must be unique."
         }
         return res.status(500).send({
             message: message
         });
-    });  
+    });
 
-    if(req.body.ingredients && beverageID) {
-        await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {
-        }).catch(error => {
+    if (req.body.ingredients && beverageID) {
+        await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {}).catch(error => {
             console.error("Error adding Beverage Ingredients: ", error);
             return res.status(500).send({
                 message: 'Error adding new ingredients to beverage. Update the beverage.'
             });
-        }); 
-    } 
+        });
+    }
 
     await Beverage.getBeverages().then(result => {
-        res.status(200).json({"data": result, "message": "Beverage added to menu."});
+        res.status(200).json({
+            "data": result,
+            "message": "Beverage added to menu."
+        });
     }).catch(error => {
         console.error("Error getting Beverages: ", error);
         return res.status(500).send({
@@ -287,14 +323,29 @@ app.post('/addBeverage', async(req,res) => {
     });
 });
 
+app.post('/deleteBeverage', async (req, res) => {
+    await Beverage.deleteBeverage(req.body.beverageID).then(result => {
+        res.status(200).json({
+            message: 'Beverage removed successfully!'
+        });
+    }).catch(error => {
+        console.error("Error deleting Beverage: ", error);
+        res.status(500).send({
+            message: 'Error removing beverage. Try again later.'
+        });
+    });
+});
+
 app.get('/cats', (req, res) => {
-  let context = {};
-  res.render('cats', util.updateMenu('/', context, req.user));
+    let context = {};
+    res.render('cats', util.updateMenu('/', context, req.user));
 });
 
-app.get('/getCats', async(req,res) => {
+app.get('/getCats', async (req, res) => {
     await Cat.getCats().then(result => {
-        res.status(200).json({"data": result});
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Cats: ", error);
         res.status(500).send({
@@ -303,9 +354,11 @@ app.get('/getCats', async(req,res) => {
     });
 });
 
-app.get('/getAvailableCats', async(req,res) => {
+app.get('/getAvailableCats', async (req, res) => {
     await Cat.getAvailableCats().then(result => {
-        res.status(200).json({"cats": result});
+        res.status(200).json({
+            "cats": result
+        });
     }).catch(error => {
         console.error("Error getting Cats: ", error);
         res.status(500).send({
@@ -314,17 +367,19 @@ app.get('/getAvailableCats', async(req,res) => {
     });
 });
 
-app.post('/addCat', async(req,res) => {
-    await Cat.addCat(req.body).then(result => {
-    }).catch(error => {
+app.post('/addCat', async (req, res) => {
+    await Cat.addCat(req.body).then(result => {}).catch(error => {
         console.error("Error adding Cat: ", error);
         res.status(500).send({
             message: 'Error adding new cat. Try again.'
         });
-    });  
+    });
 
     await Cat.getCats().then(result => {
-        res.status(200).json({"data": result, "message": "Cat added to records."});
+        res.status(200).json({
+            "data": result,
+            "message": "Cat added to records."
+        });
     }).catch(error => {
         console.error("Error getting Cats: ", error);
         res.status(500).send({
@@ -334,13 +389,15 @@ app.post('/addCat', async(req,res) => {
 });
 
 app.get('/ingredients', async (req, res) => {
-  let context = {};
-  res.render('ingredients', util.updateMenu('/', context, req.user));
+    let context = {};
+    res.render('ingredients', util.updateMenu('/', context, req.user));
 });
 
 app.get('/getIngredients', async (req, res) => {
     await Beverage.getIngredients().then(result => {
-        res.status(200).json({"data": result});
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Ingredients: ", error);
         res.status(500).send({
@@ -349,25 +406,40 @@ app.get('/getIngredients', async (req, res) => {
     });
 });
 
-app.post('/addIngredient', async(req,res) => {
-    await Beverage.addIngredient(req.body).then(result => {
-    }).catch(error => {
+app.post('/addIngredient', async (req, res) => {
+    await Beverage.addIngredient(req.body).then(result => {}).catch(error => {
         console.error("Error adding Ingredient: ", error);
         let message = "Error adding new ingredient. Try again."
-        if(error.code === "ER_DUP_ENTRY") {
+        if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding new ingredient. Ingredient name must be unique."
         }
         return res.status(500).send({
             message: message
         });
-    });  
+    });
 
     await Beverage.getIngredients().then(result => {
-        res.status(200).json({"data": result, "message": "Ingredient added to list."});
+        res.status(200).json({
+            "data": result,
+            "message": "Ingredient added to list."
+        });
     }).catch(error => {
         console.error("Error getting Ingredients: ", error);
         res.status(500).send({
             message: 'Error getting ingredients.'
+        });
+    });
+});
+
+app.post('/deleteIngredient', async (req, res) => {
+    await Beverage.deleteIngredient(req.body.ingredientID).then(result => {
+        res.status(200).json({
+            message: 'Ingredient removed successfully!'
+        });
+    }).catch(error => {
+        console.error("Error deleting Ingredient: ", error);
+        res.status(500).send({
+            message: 'Error removing bingredient. Try again later.'
         });
     });
 });
@@ -377,9 +449,11 @@ app.get('/rooms', async (req, res) => {
     res.render('rooms', util.updateMenu('/', context, req.user));
 });
 
-app.get('/getRooms', async(req,res) => {
+app.get('/getRooms', async (req, res) => {
     await Room.getRooms().then(result => {
-        res.status(200).json({"data": result});
+        res.status(200).json({
+            "data": result
+        });
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
         res.status(500).send({
@@ -390,7 +464,9 @@ app.get('/getRooms', async(req,res) => {
 
 app.get('/getEmptyRooms', async (req, res) => {
     await Room.getEmptyRooms().then(result => {
-      res.status(200).json({"rooms": result});
+        res.status(200).json({
+            "rooms": result
+        });
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
         res.status(500).send({
@@ -399,21 +475,23 @@ app.get('/getEmptyRooms', async (req, res) => {
     });
 });
 
-app.post('/addRoom', async(req,res) => {
-    await Room.addRoom(req.body).then(result => {
-    }).catch(error => {
+app.post('/addRoom', async (req, res) => {
+    await Room.addRoom(req.body).then(result => {}).catch(error => {
         console.error("Error adding Room: ", error);
         let message = "Error adding new room. Try again."
-        if(error.code === "ER_DUP_ENTRY") {
+        if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding room. Room name must be unique."
         }
         return res.status(500).send({
             message: message
         });
-    });  
+    });
 
     await Room.getRooms().then(result => {
-        res.status(200).json({"data": result, "message": "Room added to records."});
+        res.status(200).json({
+            "data": result,
+            "message": "Room added to records."
+        });
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
         res.status(500).send({
@@ -450,48 +528,60 @@ app.get('/reservations', isAuthenticated, (req, res) => {
 app.post('/reservations', async (req, res) => {
     let startTime = `${req.body.date} ${req.body.time}`;
     let endTime = new Date(startTime);
-    endTime.setMinutes(endTime.getMinutes() + parseInt(req.body.duration));   
+    endTime.setMinutes(endTime.getMinutes() + parseInt(req.body.duration));
 
     // Check if time falls out of range and fail
     let sTest = new Date(startTime);
-    if((endTime.getHours() < 8 || endTime.getHours() > 20 || (endTime.getHours() == 20 && endTime.getSeconds() > 1)) || 
-    (sTest.getHours() < 8 || sTest.getHours() > 20 || (sTest.getHours() == 20 && sTest.getSeconds() > 1))) {
+    if ((endTime.getHours() < 8 || endTime.getHours() > 20 || (endTime.getHours() == 20 && endTime.getSeconds() > 1)) ||
+        (sTest.getHours() < 8 || sTest.getHours() > 20 || (sTest.getHours() == 20 && sTest.getSeconds() > 1))) {
         res.status(200).send({
             message: 'No available rooms. Please try again.'
         });
     }
 
-    endTime = `${endTime.getFullYear()}-${('0' + endTime.getMonth()+1).slice(-2)}-${('0' + endTime.getDate()).slice(-2)} ${('0' + endTime.getHours()).slice(-2)}:${('0' + endTime.getSeconds()).slice(-2)}:00`;
+    endTime = `${endTime.getFullYear()}-${('0' + (endTime.getMonth()+1)).slice(-2)}-${('0' + endTime.getDate()).slice(-2)} ${('0' + endTime.getHours()).slice(-2)}:${('0' + endTime.getSeconds()).slice(-2)}:00`;
     console.info(`${startTime} ${endTime}`);
     await Reservation.getAvailableRooms(startTime, endTime).then(result => {
-        if(result) {
+        if (result) {
             result.forEach(item => {
                 item["reservationStart"] = startTime;
                 item["reservationEnd"] = endTime;
-                item["totalFee"] = item.fee * (parseInt(req.body.duration)/30);
+                item["totalFee"] = item.fee * (parseInt(req.body.duration) / 30);
             });
         }
-        res.status(200).json({"data": result, "search": req.body});
+        res.status(200).json({
+            "data": result,
+            "search": req.body
+        });
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
         res.status(500).send({
             message: 'Error getting available rooms. Try again.'
         });
-    });    
+    });
 });
 
 app.post('/newReservation', async (req, res) => {
     let attributes = req.body;
-    attributes.customerID = req.user.customerID;
+    
+    if(req.user) {
+        attributes.customerID = req.user.customerID;
 
-    await Reservation.createReservation(attributes).then(result => {
-        res.status(200).json({"message": "Room booked!"});
-    }).catch(error => {
-        console.error("Error creating Reservation: ", error);
+        await Reservation.createReservation(attributes).then(result => {
+            res.status(200).json({
+                "message": "Room booked!"
+            });
+        }).catch(error => {
+            console.error("Error creating Reservation: ", error);
+            res.status(500).send({
+                message: 'Error creating reservation. Try again.'
+            });
+        });
+    } else {
         res.status(500).send({
             message: 'Error creating reservation. Try again.'
         });
-    });  
+    }
 });
 
 /**

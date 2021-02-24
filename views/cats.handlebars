@@ -9,34 +9,31 @@
         </div>
     </div>
 </section>
-
 <div class="container">
-      <div id="message"></div>
-      <div id="catForm" class="generic-form">
-      <h2>Add Cat</h2>
-      <form id="add">
-        <label for="date">Date Admitted</label><br>	
-        <input type="date" id="date" name="date" required />
-        <label for="name">Name</label><br>	
-        <input type="text" id="name" name="name" required />
-        <label for="breed">Breed</label><br>	
-        <input type="text" id="breed" name="breed" required />
-        <label for="age">Age (in years)</label><br>	
-        <input type="number" id="age" name="age" min="0" required />
-        <label for="room">Assigned Room:</label>
-        <select id="room" name="room">
-            <option value="" disable selected>Select Room</option>
-        </select><br><br>
-        <input type="submit" value="Add" />
-      </form>
+    <div id="catForm" class="generic-form">
+        <h2>Add Cat</h2>
+        <form id="add">
+            <label for="date">Date Admitted</label><br>	
+            <input type="date" id="date" name="date" required />
+            <label for="name">Name</label><br>	
+            <input type="text" id="name" name="name" required />
+            <label for="breed">Breed</label><br>	
+            <input type="text" id="breed" name="breed" required />
+            <label for="age">Age (in years)</label><br>	
+            <input type="number" id="age" name="age" min="0" required />
+            <label for="room">Assigned Room:</label>
+            <select id="room" name="room">
+                <option value="" disable selected>Select Room</option>
+            </select>
+            <br><br>
+            <input type="submit" value="Add" />
+        </form>
     </div>
+    <div id="message"></div>
 </div>
-
 <div class="container">
-  <div id="message"></div>
-  <div id="dataList"></div>
+    <div id="dataList"></div>
 </div>
-
 <script id="data-template" type="text/x-handlebars-template">
     \{{#if resultData}}
     <h2>Cats at Cafe</h2>
@@ -72,7 +69,6 @@
         <p>No cats in database.</p>
     \{{/if}}
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/cats.js"></script>

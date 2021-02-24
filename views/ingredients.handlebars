@@ -9,25 +9,20 @@
         </div>
     </div>
 </section>
-
 <div class="container">
-      <div id="message"></div>
-      <div id="ingredientForm" class="generic-form">
-      <h2>Add Ingredient</h2>
-      <form id="add">
-        <label for="name">Name</label><br>	
-        <input type="text" id="name" name="name" required />
-        <input type="submit" value="Add" />
-      </form>
+    <div id="ingredientForm" class="generic-form">
+        <h2>Add Ingredient</h2>
+        <form id="add">
+            <label for="name">Name</label><br>	
+            <input type="text" id="name" name="name" required />
+            <input type="submit" value="Add" />
+        </form>
     </div>
-  </div>
+    <div id="message"></div>
 </div>
-
 <div class="container">
-  <div id="message"></div>
-  <div id="dataList"></div>
+    <div id="dataList"></div>
 </div>
-
 <script id="data-template" type="text/x-handlebars-template">
     \{{#if resultData}}
     <h2>Available Ingredients</h2>
@@ -43,8 +38,8 @@
         \{{#each resultData}}
             <tr id="\{{this.ingredientsID}}">
                 <td>\{{this.name}}</td>
-                <td><i class="fa fa-check-circle"></i></td>
-                <td><i class="fa fa-times-circle"></i></td>
+                <td><button type="submit" value="Update" onclick="updateIngredient(\{{{json this}}});">Update</button></td>
+                <td><button type="submit" value="Delete" onclick="deleteIngredient(\{{{json this}}});">Delete</button></td>
             </tr>
         \{{/each}}
       </tbody>
@@ -53,7 +48,6 @@
         <p>No ingredients in database.</p>
     \{{/if}}
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/ingredients.js"></script>
