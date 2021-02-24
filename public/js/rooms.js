@@ -127,12 +127,13 @@ function formUpdate(e) {
 
         if (response.data) {
             createTable(response.data);
-            document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
+
+        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
     // Handle error from API

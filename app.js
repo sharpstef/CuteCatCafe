@@ -258,29 +258,30 @@ app.post('/addBeverage', async(req,res) => {
         beverageID = result.insertId;
     }).catch(error => {
         console.error("Error adding Beverage: ", error);
-        res.status(500).send({
-            message: 'Error adding new beverage. Try again.'
+        let message = "Error adding new beverage. Try again."
+        if(error.code === "ER_DUP_ENTRY") {
+            message = "Error adding new beverage. Beverage name must be unique."
+        }
+        return res.status(500).send({
+            message: message
         });
     });  
 
-    console.info(JSON.stringify(req.body));
-    if(req.body.ingredients) {
-        for(let i=0; i< req.body.ingredients.length; i++) {
-            await Beverage.insertBeverageIngredients(ingredient[i], beverage).then(result => {
-            }).catch(error => {
-                console.error("Error adding Beverage Ingredient: ", error);
-                res.status(500).send({
-                    message: 'Error adding new ingredients to beverage. Update the beverage.'
-                });
-            }); 
-        };
+    if(req.body.ingredients && beverageID) {
+        await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {
+        }).catch(error => {
+            console.error("Error adding Beverage Ingredients: ", error);
+            return res.status(500).send({
+                message: 'Error adding new ingredients to beverage. Update the beverage.'
+            });
+        }); 
     } 
 
     await Beverage.getBeverages().then(result => {
         res.status(200).json({"data": result, "message": "Beverage added to menu."});
     }).catch(error => {
         console.error("Error getting Beverages: ", error);
-        res.status(500).send({
+        return res.status(500).send({
             message: 'Error getting updated list of beverages.'
         });
     });
@@ -352,8 +353,12 @@ app.post('/addIngredient', async(req,res) => {
     await Beverage.addIngredient(req.body).then(result => {
     }).catch(error => {
         console.error("Error adding Ingredient: ", error);
-        res.status(500).send({
-            message: 'Error adding new ingredient. Try again.'
+        let message = "Error adding new ingredient. Try again."
+        if(error.code === "ER_DUP_ENTRY") {
+            message = "Error adding new ingredient. Ingredient name must be unique."
+        }
+        return res.status(500).send({
+            message: message
         });
     });  
 
@@ -402,7 +407,7 @@ app.post('/addRoom', async(req,res) => {
         if(error.code === "ER_DUP_ENTRY") {
             message = "Error adding room. Room name must be unique."
         }
-        res.status(500).send({
+        return res.status(500).send({
             message: message
         });
     });  

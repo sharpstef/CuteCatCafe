@@ -113,12 +113,19 @@ let Beverage = {
             });
         });
     },
-    insertBeverageIngredients: (ingredient, beverage) => {
-        return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO BeverageIngredients SET ?';
-            let values = [ingredient, beverage];
+    insertBeverageIngredients: (ingredients, beverage) => {
+        let ingredientSet = [];
+        for(let i=0; i < ingredients.length; i++) {
+            let ingredient = [];
+            ingredient.push(parseInt(ingredients[i]));
+            ingredient.push(parseInt(beverage));
+            ingredientSet.push(ingredient);
+        }
 
-            pool.query(query, values, (err, result, fields) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO BeverageIngredients (ingredientID, beverageID) VALUES ?';
+
+            pool.query(query, [ingredientSet], (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add ingredient to beverage. Error JSON:",
                         JSON.stringify(err, null, 2));

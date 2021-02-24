@@ -61,16 +61,8 @@ function formUpdate(e) {
         data[key] = value
     });
 
-    let checkboxes = e.formData.getAll('ingredients');
-    let ingredients = [];
-
-    console.info(checkboxes);
-
-    for(let i=0; i < addForm.ingredients.length; i++) {
-        ingredients.push(addForm.ingredients[i]);
-    };
-
-    data.ingredients = ingredients.length > 0 ? ingredients: null;
+    data.ingredients = e.formData.getAll('ingredients');
+    console.info(data.ingredients);
 
     const xhr = new XMLHttpRequest();
     // Handle success from API
@@ -79,12 +71,12 @@ function formUpdate(e) {
 
         if (response.data) {
             createTable(response.data);
-            document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
+        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
     // Handle error from API
