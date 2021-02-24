@@ -3,7 +3,7 @@
     Used in the Admin/Beverages and Menu pages.
 */
 
-SELECT DISTINCT(b.beverageID), b.name, b.description, b.type, b.price, i.name AS ingredient
+SELECT b.beverageID, b.name, b.description, b.type, b.price, i.name AS ingredient
 FROM Beverages b
 LEFT JOIN BeverageIngredients bi ON b.beverageID = bi.beverageID
 JOIN Ingredients i ON bi.ingredientID = i.ingredientID

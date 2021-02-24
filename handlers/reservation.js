@@ -24,7 +24,7 @@ let Reservation = {
                         BETWEEN ?
                         AND ?
                     )
-                    ORDER BY r.name ASC;`;
+                    ORDER BY r.name ASC`;
         let values = [startTime, endTime, startTime, endTime];
 
         return new Promise((resolve, reject) => {

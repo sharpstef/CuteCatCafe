@@ -5,4 +5,4 @@
 
 UPDATE Ingredients
 SET name = :name
-WHERE IngredientID = :condition;
+WHERE ingredientID = :condition;

@@ -9,4 +9,4 @@ VALUES
 
 INSERT INTO BeverageIngredients (beverageID, ingredientID)
 VALUES
-(:beverageID, (SELECT ingredientID FROM Ingredients WHERE name = :ingredient));
+(:beverageID, :ingredientID);

@@ -25,7 +25,7 @@ ORDER BY r.name ASC;
     : indicates user provided dateTime
 */
 
-SELECT DISTINCT(r.roomID), r.name, r.roomDescription, r.fee, c.name AS cat
+SELECT r.roomID, r.name, r.roomDescription, r.fee, c.name AS cat
 FROM Rooms r
 JOIN Cats c ON c.catID = r.catID
 WHERE r.reservable = 1
@@ -39,4 +39,3 @@ AND r.roomID NOT IN (
     BETWEEN ?
     AND ?
 )
-ORDER BY r.name ASC;

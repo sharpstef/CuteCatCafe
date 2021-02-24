@@ -177,6 +177,7 @@ let Customer = {
 
         return customer;
     },
+    
     /**
      * Get all Reservations for a given customerID.
      * 

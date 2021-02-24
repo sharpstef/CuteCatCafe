@@ -8,11 +8,6 @@ FROM Cats c
 LEFT JOIN Rooms r ON c.roomID = r.roomID
 ORDER BY c.name ASC;
 
-SELECT c.catID, c.name, c.breed, c.age, c.dateAdmitted, c.adopted
-FROM Cats c
-WHERE c.adopted = 0
-ORDER BY c.name ASC;
-
 /*
     Query to get Cats that are adoptable
     and not currently assigned to a room. 
