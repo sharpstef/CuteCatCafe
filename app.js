@@ -162,7 +162,9 @@ app.post('/login',
     }),
     (req, res) => {
         let context = {};
-        res.render('index', util.updateMenu('/', context, req.user));
+        req.session.save( () => {
+            res.render('index', util.updateMenu('/', context, req.user));
+        });
     });
 
 app.get('/register', (req, res) => {
