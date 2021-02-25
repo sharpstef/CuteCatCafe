@@ -32,6 +32,21 @@ module.exports = {
   updateMenu(active, context, login_status = {}) {
     let menuItems = constants.MENU;
     context = context || {};
+    context.login_status = {};
+
+    let admin = {
+      NAME: 'Admin',
+      REF: '/admin',
+      CLASS: 'none'
+    };
+
+    if(login_status && login_status.customerID) {
+      context.login_status.NAME = "Logout";
+      context.login_status.REF = "/logout";
+    } else {
+      context.login_status.NAME = "Login";
+      context.login_status.REF = "/login";
+    }
 
     menuItems.forEach(function(item, index){
       if (item.REF === active) {
@@ -39,18 +54,14 @@ module.exports = {
       } else {
         item.CLASS = 'none';
       }
-
-      if(item.NAME === "Login" || item.NAME === "Logout") {
-        if(login_status && login_status.customerID) {
-          item.NAME = "Logout";
-          item.REF = "/logout";
-        } else {
-          item.NAME = "Login";
-          item.REF = "/login";
-        }
-      } 
     });
 
+    if(login_status.isAdmin == 0 && menuItems.length > 3) {
+      menuItems.splice(3,1);
+    } else if (login_status.isAdmin && menuItems.length < 3) {
+      menuItems.push(admin);
+    }   
+    
     context.menu_data = menuItems;
 
     return context;

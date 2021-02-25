@@ -124,7 +124,7 @@ p {
 
 .title {
     padding-bottom: 40px;
-  }
+}
 
 .title h2 {
     margin: 0;
@@ -136,6 +136,17 @@ p {
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-top: 0;
+}
+
+.subtitle h2 {
+  margin: 0;
+}
+
+.subtitle {
+  background-color:rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: center;
+  width: 100%;
 }
 
 @media only screen and (max-width: 767px) {
@@ -590,8 +601,6 @@ section {
   font-size: 17px;
 }
 
-
-
 .menu_search a.active {
   background-color: #2196F3;
   color: white;
@@ -864,6 +873,28 @@ section {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+/*====================================
+	Form Messages
+====================================*/
+#message {
+  margin: 10px auto;
+  padding:12px;
+  width: 70%;
+}
+#message i {
+  margin:10px 22px;
+  font-size:2em;
+  vertical-align: middle;
+}
+.success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.error {
+  color: #D8000C;
+  background-color: #FFD2D2;
 }
    
 /*====================================

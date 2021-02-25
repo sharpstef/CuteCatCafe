@@ -153,6 +153,42 @@ let Beverage = {
         });
     },
     /**
+     * Update details for given beverage given by beverageID.
+     * 
+     * @param {*} attributes
+     */
+    updateBeverage: (attributes) => {
+        return new Promise((resolve, reject) => {
+            let query = "SELECT * FROM Beverages WHERE beverageID = ?";
+
+            // Grab the record to prepare for null values from user
+            pool.query(query, attributes.id, (err, result, fields) => {
+                if(err) {
+                    console.error("Unable to grab record from database");
+                    reject(err);
+                } else {
+                    let oldRecord = result[0];
+                    query = `UPDATE Beverages SET name = ?, description = ?, price = ?, type = ?
+                            WHERE beverageID = ?`;
+                    let values = [attributes.name || oldRecord.name, attributes.description, 
+                        parseFloat(attributes.price) || oldRecord.price, 
+                        attributes.type || oldRecord.type, parseInt(attributes.id)];
+            
+                    pool.query(query, values, (err, result, fields) => {
+                        if (err) {
+                            console.error("Unable to update beverage", attributes.name, ". Error JSON:",
+                                JSON.stringify(err, null, 2));
+                            reject(err);
+                        }  else {
+                            resolve(result);
+                        }
+                    });
+                }
+
+            });
+        });
+    },
+    /**
      * Delete a beverage given the provided beverageID.
      * 
      * @param {*} beverage
@@ -163,6 +199,27 @@ let Beverage = {
             pool.query(query, beverage, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to remove beverage ", beverage, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+    /**
+     * Remove all ingredients for a beverage. 
+     * 
+     * @param {*} ingredients 
+     * @param {*} beverage 
+     */
+    deleteBeverageIngredients: (beverage) => {
+        return new Promise((resolve, reject) => {
+            let query = `DELETE FROM BeverageIngredients WHERE beverageID = ?`;
+
+            pool.query(query, parseInt(beverage), (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to remove ingredients for beverage. Error JSON:",
                         JSON.stringify(err, null, 2));
                     reject(err);
                 } else {

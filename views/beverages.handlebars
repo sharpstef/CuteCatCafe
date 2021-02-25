@@ -13,6 +13,7 @@
     <div id="beverageForm" class="generic-form">
         <h2>Add Beverage</h2>
         <form id="add">
+            <input type="hidden" id="id" name="id" />
             <label for="name">Name</label><br>	
             <input type="text" id="name" name="name" required />
             <label for="description">Description</label><br>	
@@ -30,7 +31,7 @@
             <label>Ingredients:</label><br>
             {{#if ingredientData}}
             {{#each ingredientData}}
-            <label><input type="checkbox" name="ingredients" value="{{this.ingredientID}}" /> {{this.name}}</label>
+            <label><input type="checkbox" name="ingredients" id="{{this.name}}" value="{{this.ingredientID}}" /> {{this.name}}</label>
             {{/each}}
             {{else}}
             No ingredients
@@ -40,12 +41,13 @@
     </div>
     <div id="message"></div>
 </div>
+
+<h2 class="subtitle">Beverages in Menu</h2>
 <div class="container">
     <div id="dataList"></div>
 </div>
 <script id="data-template" type="text/x-handlebars-template">
     \{{#if resultData}}
-    <h2>Beverages in Menu</h2>
     <table id="dataDetails" class="generic">
       <thead>
         <tr>
@@ -66,7 +68,7 @@
                 <td>\{{this.type}}</td>
                 <td>\{{this.price}}</td>
                 <td>\{{this.ingredients}}</td>
-                <td><button type="submit" value="Update" onclick="updateBeverage(\{{{json this}}});">Update</button></td>
+                <td><button type="submit" value="Update" onclick="editRow(\{{{json this}}});">Update</button></td>
                 <td><button type="submit" value="Delete" onclick="deleteBeverage(\{{{json this}}});">Delete</button></td>
             </tr>
         \{{/each}}

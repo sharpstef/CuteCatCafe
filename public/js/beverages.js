@@ -48,6 +48,32 @@ function getBeverages() {
 }
 
 /**
+ * Helper function to populate the form with the data from the row
+ * being edited. Only one row can be edited at a time. 
+ * Drags user view up to the form. 
+ * 
+ * @param {Object} item 
+ */
+function editRow(item) {
+    clearMessage();
+    document.getElementById("id").setAttribute("value", item.beverageID);
+    document.getElementById("name").setAttribute("value", item.name);
+    document.getElementById("description").setAttribute("value", item.description);
+    document.getElementById("type").value = item.type;
+    document.getElementById("price").setAttribute("value", item.price);
+
+    // Check boxes for the ingredients in the drink
+    item.ingredients.forEach(ingredient => {
+        document.getElementById(ingredient).checked = true;
+    });
+
+    document.getElementById("beverageForm").scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+};
+
+/**
  * Helper function to submit new beverage data.
  * 
  * @param {Object} e 
@@ -62,7 +88,6 @@ function formUpdate(e) {
     });
 
     data.ingredients = e.formData.getAll('ingredients');
-    console.info(data.ingredients);
 
     const xhr = new XMLHttpRequest();
     // Handle success from API
@@ -72,7 +97,11 @@ function formUpdate(e) {
         if (response.message) {
             updateMessage(event.target.status, response.message);
         }
-        document.getElementById("message").scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        document.getElementById("message").scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
 
         if(event.target.status == 200) {
             getBeverages();
@@ -85,7 +114,12 @@ function formUpdate(e) {
     });
 
     // Send POST request to server
-    xhr.open("POST", "/addBeverage", true);
+    if (data.id && data.id > 0) {
+        xhr.open("POST", "/updateBeverage", true);
+      } else {
+        xhr.open("POST", "/addBeverage", true);
+    }
+
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(data));
 };
@@ -127,10 +161,11 @@ function deleteBeverage(item) {
  * Helper function to reset values in the form. 
 */
 function resetForm() {
+    document.getElementById("id").value = -1;
     document.getElementById("name").value = "";
     document.getElementById("description").value = "";
     document.getElementById("price").value = 0;
-    document.getElementById("type").value = "hot";
+    document.getElementById("type").value = "";
     uncheckAll();
 };
 

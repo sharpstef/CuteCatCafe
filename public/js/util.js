@@ -31,8 +31,10 @@ function removeTable() {
  * @param {String} message 
  */
 function updateMessage(status, message) {
-    let messageClass = status < 400 ? 'class="success"' : 'class="error"';
-    document.getElementById("message").innerHTML = `<h2 ${messageClass}>${message}</h2>`;
+    let messageDiv = document.getElementById("message");
+    let icon = status < 400 ? `fa fa-check` : 'fa-times-circle';
+    messageDiv.className = status < 400 ? 'success' : 'error';
+    messageDiv.innerHTML = `<i class="fa ${icon}"></i>${message}`;
 }
 
 function clearMessage() {

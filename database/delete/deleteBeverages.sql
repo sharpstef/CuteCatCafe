@@ -12,5 +12,4 @@ DELETE FROM Beverages WHERE beverageId = :condition;
     : used to indicate user and system provided values
 */
 DELETE FROM BeverageIngredients 
-WHERE beverageID = :condition 
-AND ingredientID IN (SELECT ingredientID FROM Ingredients WHERE name = :condition);
+WHERE beverageID = :condition;

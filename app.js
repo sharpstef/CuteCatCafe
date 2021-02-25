@@ -10,7 +10,6 @@ const hb = require('express-handlebars');
 const passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 const session = require('express-session');
-const moment = require('moment');
 
 // Handlers for database entities
 const Beverage = require('./handlers/beverage');
@@ -126,12 +125,14 @@ let isAuthenticated = (req, res, next) => {
 };
 
 let isAuthAdmin = (req, res, next) => {
-    if (isAuthenticated) {
-        if (req.user.isAdmin) {
+    if (req.user) {
+        if(req.user.isAdmin) {
             return next();
         } else {
             res.redirect('/');
         }
+    } else {
+        res.redirect('/login');
     }
 };
 
@@ -186,7 +187,7 @@ app.post('/register', async (req, res) => {
         context.error = "Account creation failed."
     });
 
-    res.render('register', util.updateMenu('/login', context, false));
+    res.render('register', util.updateMenu('/login', context, req.user));
 });
 
 app.get('/logout', (req, res) => {
@@ -206,7 +207,7 @@ app.get('/account', isAuthenticated, async (req, res) => {
         admin: req.user.isAdmin
     };
 
-    res.render('account', util.updateMenu('/', context, null));
+    res.render('account', util.updateMenu('/', context, req.user));
 });
 
 /**
@@ -258,11 +259,11 @@ app.post('/deleteReservation', async (req, res) => {
  * Inventory Management: Beverages, Cats, Ingredients, Rooms
  * 
  */
-app.get('/admin', (req, res) => {
-    res.render('admin', util.updateMenu('/', {}));
+app.get('/admin', isAuthAdmin, (req, res) => {
+    res.render('admin', util.updateMenu('/', {}, req.user));
 });
 
-app.get('/beverages', async (req, res) => {
+app.get('/beverages', isAuthAdmin, async (req, res) => {
     let context = {};
     await Beverage.getIngredients().then(result => {
         context.ingredientData = result;
@@ -308,7 +309,45 @@ app.post('/addBeverage', async (req, res) => {
         await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {}).catch(error => {
             console.error("Error adding Beverage Ingredients: ", error);
             return res.status(500).send({
-                message: 'Error adding new ingredients to beverage. Update the beverage.'
+                message: 'Error adding new ingredients to beverage.'
+            });
+        });
+    }
+});
+
+app.post('/updateBeverage', async (req, res) => {
+    let beverageID = req.body.id;
+
+    // First update the Beverage
+    await Beverage.updateBeverage(req.body).then(result => {
+    }).catch(error => {
+        console.error("Error updating Beverage: ", error);
+        let message = "Error updating beverage. Try again."
+        if (error.code === "ER_DUP_ENTRY") {
+            message = "Error updating beverage. Beverage name must be unique."
+        }
+        return res.status(500).send({
+            message: message
+        });
+    });
+
+    // Now prepare to update the beverageIngredients. Remove all items and then add the new set.
+    if (req.body.ingredients) {
+        await Beverage.deleteBeverageIngredients(beverageID).then(result => {}).catch(error => {
+            console.error("Error deleting Beverage Ingredients: ", error);
+            return res.status(500).send({
+                message: 'Error updating ingredients for beverage.'
+            });
+        });
+
+        await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {
+            res.status(200).json({
+                "message": "Beverage details updated."
+            });
+        }).catch(error => {
+            console.error("Error adding Beverage Ingredients: ", error);
+            return res.status(500).send({
+                message: 'Error updating ingredients for beverage'
             });
         });
     }
@@ -327,7 +366,7 @@ app.post('/deleteBeverage', async (req, res) => {
     });
 });
 
-app.get('/cats', (req, res) => {
+app.get('/cats', isAuthAdmin, (req, res) => {
     let context = {};
     res.render('cats', util.updateMenu('/', context, req.user));
 });
@@ -384,7 +423,7 @@ app.post('/deleteCat', async (req, res) => {
     });
 });
 
-app.get('/ingredients', async (req, res) => {
+app.get('/ingredients', isAuthAdmin, async (req, res) => {
     let context = {};
     res.render('ingredients', util.updateMenu('/', context, req.user));
 });
@@ -428,7 +467,7 @@ app.post('/updateIngredient', async (req, res) => {
         console.error("Error updating Ingredient: ", error);
         let message = "Error updating ingredient. Try again."
         if (error.code === "ER_DUP_ENTRY") {
-            message = "Error adding updating ingredient. Ingredient name must be unique."
+            message = "Error updating ingredient. Ingredient name must be unique."
         }
         res.status(500).send({
             message: message
@@ -449,7 +488,7 @@ app.post('/deleteIngredient', async (req, res) => {
     });
 });
 
-app.get('/rooms', async (req, res) => {
+app.get('/rooms', isAuthAdmin, async (req, res) => {
     let context = {};
     res.render('rooms', util.updateMenu('/', context, req.user));
 });
@@ -517,7 +556,7 @@ app.post('/deleteRoom', async (req, res) => {
  */
 app.get('/menu', (req, res) => {
     let context = {}
-    res.render('menu', util.updateMenu('/menu', context));
+    res.render('menu', util.updateMenu('/menu', context, req.user));
 });
 
 app.get('/checkout', (req, res) => {

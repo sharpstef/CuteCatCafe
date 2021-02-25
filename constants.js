@@ -16,8 +16,8 @@ module.exports = Object.freeze({
         CLASS: 'none'
       },
       {
-        NAME: 'Login',
-        REF: '/login',
+        NAME: 'Admin',
+        REF: '/admin',
         CLASS: 'none'
       }
     ],
