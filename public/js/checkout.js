@@ -10,12 +10,9 @@ if(bevArray) {
  */
 function removeBev (beverage) {
     for( var i = 0; i < bevArray.length; i++){ 
-    
-        if ( bevArray[i] === beverage) { 
-    
-            arr.splice(i, 1); 
+        if ( bevArray[i].beverageID === beverage.beverageID) { 
+            bevArray.splice(i, 1); 
         }
     }
-
     createTable(bevArray);
 }
