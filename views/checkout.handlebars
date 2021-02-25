@@ -10,115 +10,37 @@
     </div>
 </section>
 
-<div class="shopping-cart">
-  <!-- Title -->
-  <div class="s_title">
-    Your Beverage Order
-  </div>
- 
-  <!-- Product #1 -->
-  <div class="checkout_item">
-    <div class="buttons">
-      <span class="delete-btn"></span>
-    </div>
- 
-    <div class="description">
-      <span>Caramel Frappe</span>
-    </div>
- 
-    <div class="quantity">
-        <button class="minus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/minus.svg" alt="" />
-      </button>
-      <input type="text" name="name" value="1">
-      <button class="plus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/plus.svg" alt="" />
-      </button>
-    </div>
- 
-    <div class="total-price">$6.25</div>
-  </div>
- 
-  <!-- Product #2 -->
-  <div class="checkout_item">
-    <div class="buttons">
-      <span class="delete-btn"></span>
-    </div>
- 
-    <div class="description">
-      <span>White Mocha</span>
-    </div>
- 
-    <div class="quantity">
-      <button class="minus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/minus.svg" alt="" />
-      </button>
-      <input type="text" name="name" value="1">
-      <button class="plus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/plus.svg" alt="" />
-      </button>
-    </div>
- 
-    <div class="total-price">$4.50</div>
-  </div>
- 
-  <!-- Product #3 -->
-  <div class="checkout_item">
-    <div class="buttons">
-      <span class="delete-btn"></span>
-    </div>
- 
-    <div class="description">
-      <span>Chai Latte</span>
-    </div>
- 
-    <div class="quantity">
-      <button class="minus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/minus.svg" alt="" />
-      </button>
-      <input type="text" name="name" value="1">
-      <button class="plus-btn" type="button" name="button">
-        <img src="https://designmodo.com/demo/shopping-cart/plus.svg" alt="" />
-      </button>
-    </div>
- 
-    <div class="total-price">$4.00</div>
-  </div>
+<div class="container">
+    <div id="dataList"></div>
 </div>
+<script id="data-template" type="text/x-handlebars-template">
+    \{{#if resultData}}
+    <table id="dataDetails" class="generic">
+      <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody> 
+        \{{#each resultData}}
+            <tr id="\{{this.beverageID}}">
+                <td>\{{this.name}}</td>
+                <td><input type="number" name="quantity" value="\{{#if this.quantity}}\{{this.quantity}}\{{else}}1\{{/if}}"></td>
+                <td>\{{this.price}}</td>
+                <td><button type="submit" onclick="removeBev(\{{{json this}}});">Remove</button></td>
+            </tr>
+        \{{/each}}
+      </tbody>
+    </table>
+    \{{else}}
+        <p>No items in cart.</p>
+    \{{/if}}
+</script>
 
-    
 
-<!-- I was having trouble adding the Javascript so maybe you can help me...
-$('.minus-btn').on('click', function(e) {
-    e.preventDefault();
-    var $this = $(this);
-    var $input = $this.closest('div').find('input');
-    var value = parseInt($input.val());
- 
-    if (value &amp;amp;gt; 1) {
-        value = value - 1;
-    } else {
-        value = 0;
-    }
- 
-  $input.val(value);
- 
-});
- 
-$('.plus-btn').on('click', function(e) {
-    e.preventDefault();
-    var $this = $(this);
-    var $input = $this.closest('div').find('input');
-    var value = parseInt($input.val());
- 
-    if (value &amp;amp;lt; 100) {
-        value = value + 1;
-    } else {
-        value =100;
-    }
- 
-    $input.val(value);
-});
--->
-
-<script src="./js/menu.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/checkout.js"></script>

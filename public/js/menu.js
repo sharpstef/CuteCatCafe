@@ -1,25 +1,41 @@
-// Get the modal
-var modal = document.getElementById("myModal");
+// Load initial beverage data
+getBeverages();
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+let bevArray = [];
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
+/**
+* Delete a beverage given the provided beverageID.
+* 
+* @param {*} beverage
+*/
+function addToCart(beverage) {
+  bevArray.push(beverage);
+  sessionStorage.setItem("bevArray", JSON.stringify(bevArray));
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+/**
+ * Helper to get all available beverages.
+ */
+function getBeverages() {
+    const xhr = new XMLHttpRequest();
+    // Handle success from API
+    xhr.addEventListener("load", event => {
+        let response = JSON.parse(event.target.responseText);
+        if (response.data) {
+            createTable(response.data);
+        }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+        if (response.message) {
+            updateMessage(event.target.status, response.message);
+        }
+    });
+
+    // Handle error from API
+    xhr.addEventListener("error", event => {
+        console.log(event);
+    });
+
+    // Send GET request to server
+    xhr.open("GET", "/getBeverages", true);
+    xhr.send();
+};
