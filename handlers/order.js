@@ -1,7 +1,7 @@
 const pool = require('../connect');
 
 let Order = {
-        /**
+    /**
      * Create a new reservation from form data.
      * 
      * @param {*} attributes
@@ -12,10 +12,43 @@ let Order = {
         return new Promise((resolve, reject) => {
             let query = 'INSERT INTO Orders SET ?';
             // (customerID, roomID, totalFee, reservationStart, reservationEnd)
-            // (purchaseTime, totalAmount, complete, customerID)
             pool.query(query, order, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new order", attributes.customerID, ". Error JSON:",
+                        JSON.stringify(err, null, 2));
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    },
+
+    /**
+     * Add records for each ingredient in a beverage. 
+     * Add records for each    item    in an order.
+     * 
+     * @param {*} itemsData//ingredients 
+     * @param {*} orderID //beverage 
+     */
+    insertOrderItems: (itemsData, orderID) => {
+        let itemSet = [];
+        let status = "ordered";
+        for(let i=0; i < itemsData.length; i++) {
+            let item = [];
+            item.push(parseInt(orderID));
+            item.push(parseInt(itemsData[i].beverageID));
+            item.push(parseInt(itemsData[i].quantity));
+            item.push(status);
+            itemSet.push(item);
+        }
+
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO OrderItems (orderID, beverageID, quantity, status) VALUES ?';
+
+            pool.query(query, [itemSet], (err, result, fields) => {
+                if (err) {
+                    console.error("Unable to add order item. Error JSON:",
                         JSON.stringify(err, null, 2));
                     reject(err);
                 } else {

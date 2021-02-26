@@ -18,25 +18,33 @@ function removeBev (beverage) {
 }
 
 
-/**
+/** Submit user order
  * @param {Object} data
  */
 function submitOrder(data) {
     let totalPrice = 0;
     let quantity = 0;
+    let itemDataArray = []
 
     for (var i = 0; i < bevArray.length; i++){
-        quantity = data.resultData[i].quantity
-        quantity = document.getElementById(i.toString()).value
+        data.resultData[i].quantity = document.getElementById(i.toString()).value;
+        quantity = data.resultData[i].quantity;
         totalPrice = totalPrice + quantity * data.resultData[i].price;
+
+        itemDataArray[i] = {
+            beverageID: data.resultData[i].beverageID,
+            quantity: quantity
+        }
     }
+
     let orderData = {
-        totalAmount: totalPrice
+        totalAmount: totalPrice,
+        itemsData: itemDataArray
     };
     
     bevArray = [];
     createTable(bevArray);
-    //clearMessage();
+    clearMessage();
 
     const xhr = new XMLHttpRequest();
     // Handle success from API
@@ -58,5 +66,8 @@ function submitOrder(data) {
     xhr.open("POST", "/checkout", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(orderData));
+
 };
+
+
 
