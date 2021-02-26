@@ -17,6 +17,7 @@ const Cat = require('./handlers/cat');
 const Customer = require('./handlers/customer');
 const Reservation = require('./handlers/reservation');
 const Room = require('./handlers/room');
+const Order = require('./handlers/order');
 
 // Helpers
 const util = require('./util');
@@ -561,10 +562,38 @@ app.get('/menu', (req, res) => {
     res.render('menu', util.updateMenu('/menu', context, req.user));
 });
 
-app.get('/checkout', (req, res) => {
+app.get('/checkout', isAuthenticated, (req, res) => {
     let context = {}
-    res.render('checkout', util.updateMenu('/', {}, req.user));
+    res.render('checkout', util.updateMenu('/checkout', context, req.user));
 });
+
+app.post('/checkout', async (req, res) => {
+    let purchaseTime = new Date();  // Current time (when order was placed)
+    purchaseTime = `${purchaseTime.getFullYear()}-${('0' + (purchaseTime.getMonth()+1)).slice(-2)}-${('0' + purchaseTime.getDate()).slice(-2)} ${('0' + purchaseTime.getHours()).slice(-2)}:${('0' + purchaseTime.getSeconds()).slice(-2)}:00`;
+
+    let attributes = req.body; 
+    
+    if(req.user) {
+        attributes.customerID = req.user.customerID; 
+        attributes.purchaseTime = purchaseTime;
+
+        await Order.createOrder(attributes).then(result => {
+            res.status(200).json({
+                "message": "Order Added!"
+            });
+        }).catch(error => {
+            console.error("Error creating order: ", error);
+            res.status(500).send({
+                message: 'Error creating order. Try again.'
+            });
+        });
+    } else {
+        res.status(500).send({
+            message: 'Error creating order. Try again.'
+        });
+    }
+});
+
 
 /**
  * 

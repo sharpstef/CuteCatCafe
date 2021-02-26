@@ -1,7 +1,7 @@
 /************************************************************************
  * Beverage Form Data Handlers
  ************************************************************************/
-// Load initial room data
+// Load initial beverage data
 getBeverages();
 
 // Configure listeners for the main form 
