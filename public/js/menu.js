@@ -9,8 +9,9 @@ let bevArray = [];
 * @param {*} beverage
 */
 function addToCart(beverage) {
-  bevArray.push(beverage);
-  sessionStorage.setItem("bevArray", JSON.stringify(bevArray));
+    beverage["quantity"] = 1;
+    bevArray.push(beverage);
+    sessionStorage.setItem("bevArray", JSON.stringify(bevArray));
 }
 
 /**
