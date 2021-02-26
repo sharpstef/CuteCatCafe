@@ -58,6 +58,8 @@ module.exports = {
 
     if(login_status.isAdmin == 0 && menuItems.length > 3) {
       menuItems.splice(3,1);
+    } else if(!login_status.isAdmin) {
+      menuItems.splice(3,1);
     } else if (login_status.isAdmin && menuItems.length < 3) {
       menuItems.push(admin);
     }   
