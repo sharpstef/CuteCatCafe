@@ -66,6 +66,7 @@ passport.use(new Strategy({
     passReqToCallback: true
 }, async (req, email, password, done) => {
 
+    // Find the user with the given email.
     await Customer.findByEmail(email).then(user => {
         if (user) {
             const isValid = Customer.validPassword(password, user.password, user.salt);
@@ -117,6 +118,7 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Return if the user is logged in 
 let isAuthenticated = (req, res, next) => {
     if (req.user)
         return next();
@@ -125,6 +127,7 @@ let isAuthenticated = (req, res, next) => {
 
 };
 
+// Return if the user is logged in and is an Admin
 let isAuthAdmin = (req, res, next) => {
     if (req.user) {
         if(req.user.isAdmin) {
@@ -148,6 +151,8 @@ app.get('/', (req, res) => {
  * User Authentication and Account Information
  * 
  */
+
+ // Render for the login page
 app.get('/login', (req, res) => {
     let context = {}
     if (req.user) {
@@ -157,6 +162,7 @@ app.get('/login', (req, res) => {
     }
 });
 
+// Verifies a user exists and redirects to login on failure
 app.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/login'
@@ -168,6 +174,7 @@ app.post('/login',
         });
     });
 
+// Render the registration page
 app.get('/register', (req, res) => {
     let context = {}
     if (req.user) {
@@ -177,6 +184,7 @@ app.get('/register', (req, res) => {
     }
 });
 
+// Attempt to create a new user
 app.post('/register', async (req, res) => {
     let context = {}
     await Customer.createCustomer(req.body).then(user => {
@@ -193,11 +201,13 @@ app.post('/register', async (req, res) => {
     res.render('register', util.updateMenu('/login', context, req.user));
 });
 
+// Initiate clearing the session of the user data
 app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 });
 
+// Render the account page with Customer data
 app.get('/account', isAuthenticated, async (req, res) => {
     let context = {};
     context.data = {};
@@ -218,6 +228,8 @@ app.get('/account', isAuthenticated, async (req, res) => {
  * Order and Reservation History
  * 
  */
+
+// GET request for all Orders for a Customer
 app.get('/getOrders', async (req, res) => {
     await Customer.getOrdersByCustomer(req.user.customerID).then(result => {
         res.status(200).json({
@@ -231,6 +243,7 @@ app.get('/getOrders', async (req, res) => {
     });
 });
 
+// GET rquest for all the Reservations for a Customer
 app.get('/getReservations', async (req, res) => {
     await Customer.getReservationsByCustomer(req.user.customerID).then(result => {
         res.status(200).json({
@@ -244,6 +257,7 @@ app.get('/getReservations', async (req, res) => {
     });
 });
 
+// POST request to remove Reservation for a Customer
 app.post('/deleteReservation', async (req, res) => {
     await Reservation.deleteReservation(req.body.reservationID).then(result => {
         res.status(200).json({
@@ -262,10 +276,13 @@ app.post('/deleteReservation', async (req, res) => {
  * Inventory Management: Beverages, Cats, Ingredients, Rooms
  * 
  */
+
+ // Render admin page
 app.get('/admin', isAuthAdmin, (req, res) => {
     res.render('admin', util.updateMenu('/', {}, req.user));
 });
 
+// Render beverages page
 app.get('/beverages', isAuthAdmin, async (req, res) => {
     let context = {};
     await Beverage.getIngredients().then(result => {
@@ -276,6 +293,7 @@ app.get('/beverages', isAuthAdmin, async (req, res) => {
     res.render('beverages', util.updateMenu('/', context, req.user));
 });
 
+// GET request for returning data from Beverages tables with BeverageIngredients data
 app.get('/getBeverages', async (req, res) => {
     await Beverage.getBeverages().then(result => {
         res.status(200).json({
@@ -289,11 +307,14 @@ app.get('/getBeverages', async (req, res) => {
     });
 });
 
+// POST request to add a new Beverage which also inserts an item in BeverageIngredients for each 
+// Ingredient in the Beverage
 app.post('/addBeverage', async (req, res) => {
     let beverageID = null;
 
+    // Attempt to add the Beverage first
     await Beverage.addBeverage(req.body).then(result => {
-        beverageID = result.insertId;
+        beverageID = result.insertId; // Get the last inserted ID for new item
         res.status(200).json({
             "message": "Beverage added to menu."
         });
@@ -308,6 +329,7 @@ app.post('/addBeverage', async (req, res) => {
         });
     });
 
+    // If Beverage insert was a success and there are Ingredients then add values to Beverage Ingredients
     if (req.body.ingredients && beverageID) {
         await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {}).catch(error => {
             console.error("Error adding Beverage Ingredients: ", error);
@@ -318,6 +340,7 @@ app.post('/addBeverage', async (req, res) => {
     }
 });
 
+// POST request to update values for a given Beverage
 app.post('/updateBeverage', async (req, res) => {
     let beverageID = req.body.id;
 
@@ -336,6 +359,9 @@ app.post('/updateBeverage', async (req, res) => {
 
     // Now prepare to update the beverageIngredients. Remove all items and then add the new set.
     if (req.body.ingredients) {
+
+        // Delete all existing records for a Beverage since this is currently faster than doing
+        // a Select and then comparing each item. 
         await Beverage.deleteBeverageIngredients(beverageID).then(result => {}).catch(error => {
             console.error("Error deleting Beverage Ingredients: ", error);
             return res.status(500).send({
@@ -343,6 +369,7 @@ app.post('/updateBeverage', async (req, res) => {
             });
         });
 
+        // Add new records for each Ingredient in the new list
         await Beverage.insertBeverageIngredients(req.body.ingredients, beverageID).then(result => {
             res.status(200).json({
                 "message": "Beverage details updated."
@@ -356,6 +383,7 @@ app.post('/updateBeverage', async (req, res) => {
     }
 });
 
+// POST request to remove a beverage given a beverageID.
 app.post('/deleteBeverage', async (req, res) => {
     await Beverage.deleteBeverage(req.body.beverageID).then(result => {
         res.status(200).json({
@@ -369,11 +397,13 @@ app.post('/deleteBeverage', async (req, res) => {
     });
 });
 
+// Render the cats page
 app.get('/cats', isAuthAdmin, (req, res) => {
     let context = {};
     res.render('cats', util.updateMenu('/', context, req.user));
 });
 
+// GET request to return data for all items in the Cats table with Rooms.
 app.get('/getCats', async (req, res) => {
     await Cat.getCats().then(result => {
         res.status(200).json({
@@ -387,6 +417,7 @@ app.get('/getCats', async (req, res) => {
     });
 });
 
+// GET request to return data for all cats not adopted and not assigned a room.
 app.get('/getAvailableCats', async (req, res) => {
     await Cat.getAvailableCats().then(result => {
         res.status(200).json({
@@ -400,6 +431,7 @@ app.get('/getAvailableCats', async (req, res) => {
     });
 });
 
+// POST request to insert a new Cat and update Room data if applicable.
 app.post('/addCat', async (req, res) => {
     await Cat.addCat(req.body).then(result => {
         res.status(200).json({
@@ -413,6 +445,7 @@ app.post('/addCat', async (req, res) => {
     });
 });
 
+// POST request to delete a cat given a catID.
 app.post('/deleteCat', async (req, res) => {
     await Cat.deleteCat(req.body.catID).then(result => {
         res.status(200).json({
@@ -426,11 +459,13 @@ app.post('/deleteCat', async (req, res) => {
     });
 });
 
+// Render the ingredients page.
 app.get('/ingredients', isAuthAdmin, async (req, res) => {
     let context = {};
     res.render('ingredients', util.updateMenu('/', context, req.user));
 });
 
+// GET request to send all data in the Ingredients table.
 app.get('/getIngredients', async (req, res) => {
     await Beverage.getIngredients().then(result => {
         res.status(200).json({
@@ -444,6 +479,7 @@ app.get('/getIngredients', async (req, res) => {
     });
 });
 
+// POST request to insert a new Ingredient.
 app.post('/addIngredient', async (req, res) => {
     await Beverage.addIngredient(req.body).then(result => {
         res.status(200).json({
@@ -461,6 +497,7 @@ app.post('/addIngredient', async (req, res) => {
     });
 });
 
+// POST request to update the name for a given ingredientID. Enforces unique.
 app.post('/updateIngredient', async (req, res) => {
     await Beverage.updateIngredient(req.body).then(result => {
         res.status(200).json({
@@ -478,6 +515,7 @@ app.post('/updateIngredient', async (req, res) => {
     });
 });
 
+// POST request to delete a given ingredientID.
 app.post('/deleteIngredient', async (req, res) => {
     await Beverage.deleteIngredient(req.body.ingredientID).then(result => {
         res.status(200).json({
@@ -491,11 +529,13 @@ app.post('/deleteIngredient', async (req, res) => {
     });
 });
 
+// Render rooms page
 app.get('/rooms', isAuthAdmin, async (req, res) => {
     let context = {};
     res.render('rooms', util.updateMenu('/', context, req.user));
 });
 
+// GET request to return all data in the Rooms table with Cats.
 app.get('/getRooms', async (req, res) => {
     await Room.getRooms().then(result => {
         res.status(200).json({
@@ -509,6 +549,7 @@ app.get('/getRooms', async (req, res) => {
     });
 });
 
+// GET request for all rooms without a catID FK.
 app.get('/getEmptyRooms', async (req, res) => {
     await Room.getEmptyRooms().then(result => {
         res.status(200).json({
@@ -522,6 +563,7 @@ app.get('/getEmptyRooms', async (req, res) => {
     });
 });
 
+// POST request to insert a new Room. Enforces unique name.
 app.post('/addRoom', async (req, res) => {
     await Room.addRoom(req.body).then(result => {
         res.status(200).json({
@@ -539,6 +581,7 @@ app.post('/addRoom', async (req, res) => {
     });
 });
 
+// POST request to delete a room given a roomID.
 app.post('/deleteRoom', async (req, res) => {
     await Room.deleteRoom(req.body.roomID).then(result => {
         res.status(200).json({
@@ -557,11 +600,14 @@ app.post('/deleteRoom', async (req, res) => {
  * Menu and Checkout
  * 
  */
+
+// Render the menu page.
 app.get('/menu', (req, res) => {
     let context = {}
     res.render('menu', util.updateMenu('/menu', context, req.user));
 });
 
+// Render the checkout page. Requires authenticated user. 
 app.get('/checkout', isAuthenticated, (req, res) => {
     let context = {}
     res.render('checkout', util.updateMenu('/checkout', context, req.user));
@@ -606,46 +652,22 @@ app.post('/checkout', async (req, res) => {
     }
 });
 
-/*app.post('/checkoutItem', async (req, res) => {
-    let purchaseTime = new Date();  // Current time (when order was placed)
-    purchaseTime = `${purchaseTime.getFullYear()}-${('0' + (purchaseTime.getMonth()+1)).slice(-2)}-${('0' + purchaseTime.getDate()).slice(-2)} ${('0' + purchaseTime.getHours()).slice(-2)}:${('0' + purchaseTime.getSeconds()).slice(-2)}:00`;
-
-    let attributes = req.body; 
-    
-    if(req.user) {
-        attributes.customerID = req.user.customerID; 
-        attributes.purchaseTime = purchaseTime;
-
-
-        await Order.createOrder(attributes).then(result => {
-            res.status(200).json({
-                "message": "Order Submitted!"
-            });
-        }).catch(error => {
-            console.error("Error creating order: ", error);
-            res.status(500).send({
-                message: 'Error creating order. Try again.'
-            });
-        });
-    } else {
-        res.status(500).send({
-            message: 'Error creating order. Try again.'
-        });
-    }
-});*/
-
-
 /**
  * 
  * Reservation Booking
  * 
  */
+
+ // Render booking page.
 app.get('/reservations', isAuthenticated, (req, res) => {
     let context = {}
     res.render('reservations', util.updateMenu('/reservations', context, req.user));
 });
 
+// POST request to find available rooms for a given date and time. 
 app.post('/reservations', async (req, res) => {
+
+    // Create the reservationEnd value as the startTime incremented by duration.
     let startTime = `${req.body.date} ${req.body.time}`;
     let endTime = new Date(startTime);
     endTime.setMinutes(endTime.getMinutes() + parseInt(req.body.duration));
@@ -659,10 +681,15 @@ app.post('/reservations', async (req, res) => {
         });
     }
 
+    // Format the endTime so that it is not stored as GMT
     endTime = `${endTime.getFullYear()}-${('0' + (endTime.getMonth()+1)).slice(-2)}-${('0' + endTime.getDate()).slice(-2)} ${('0' + endTime.getHours()).slice(-2)}:${('0' + endTime.getSeconds()).slice(-2)}:00`;
     console.info(`${startTime} ${endTime}`);
+
+    // Get all rooms that aren't booked for the startTime to endTime period. 
     await Reservation.getAvailableRooms(startTime, endTime).then(result => {
         if (result) {
+
+            // Store the startTime and endTime with each item. Calculate the total feed for the reservation.
             result.forEach(item => {
                 item["reservationStart"] = startTime;
                 item["reservationEnd"] = endTime;
@@ -681,6 +708,7 @@ app.post('/reservations', async (req, res) => {
     });
 });
 
+// POST request to insert a new Reservation.
 app.post('/newReservation', async (req, res) => {
     let attributes = req.body;
     
@@ -709,6 +737,8 @@ app.post('/newReservation', async (req, res) => {
  * Util Pages
  * 
  */
+
+// Render the 404 page
 app.use((req, res) => {
     res.status(404);
     let context = {};

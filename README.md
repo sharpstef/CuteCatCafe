@@ -31,7 +31,7 @@ Contains helper functions to be resused by multiple backend functions. Contains 
 the menu for authenticated users. 
 
 ## Frontend
-### public
+### public/
 - css: Custom css and vendor css for imported modules.
 - fonts: Fontawesome for icons used on site
 - images: Images licensed from Shutterstock for the site banner
@@ -43,15 +43,15 @@ the menu for authenticated users.
     - checkout.js: Grabs session stored cart and makes Post request to populate Orders and OrderItems.
     - ingredients.js: Get and Post requests for managing Ingredients in Admin/Ingredients.
     - menu.js: Get request for populating a menu and session storage for adding items to a cart.
-    - reservation.js: Get request for available rooms and then Post to add a Reservation to the database.
+    - reservation.js: Get request for available rooms and then Post to add a Reservation to the database. Support for deleting a Reservation for a Customer. 
     - rooms.js: Get and Post requests for managing Rooms in Admin/Rooms.
     - util.js: Helper functions for populating tables and clearing parts of the page used by all pages.
 
-### views
-- layouts: main.handlebars - Site styling around <body>
-- partials: footer.handlebars, nav.handlebars - Styling for header and footer for each page.
+### views/
+- layouts/: main.handlebars - Site styling around <body>
+- partials/: footer.handlebars, nav.handlebars - Styling for header and footer for each page.
 - 404.handlebars
-- account.handlebars - Select customer, Select Orders/OrderItems, and Select Reservations
+- account.handlebars - Select customer, Select Orders/OrderItems, Select Reservations, Delete Reservations.
 - admin.handlebars - Sub navigation to the four admin pages. Requires authenticated user with isAdmin.
 - beverages.handlebars - Select Beverages, Select Ingredients, Insert Beverages/BeverageIngredients, Update Beverages/Beverage Ingredients. Requires authenticated user with isAdmin.
 - cats.handlebars - Select available Rooms, Select Cats, Insert Cats/Update Rooms, Delete Cats. Requires authenticated user with isAdmin.
