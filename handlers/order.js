@@ -2,7 +2,7 @@ const pool = require('../connect');
 
 let Order = {
     /**
-     * Create a new reservation from form data.
+     * Create a new order from form data.
      * 
      * @param {*} attributes
      */
@@ -11,7 +11,6 @@ let Order = {
 
         return new Promise((resolve, reject) => {
             let query = 'INSERT INTO Orders SET ?';
-            // (customerID, roomID, totalFee, reservationStart, reservationEnd)
             pool.query(query, order, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new order", attributes.customerID, ". Error JSON:",
@@ -25,11 +24,11 @@ let Order = {
     },
 
     /**
-     * Add records for each ingredient in a beverage. 
-     * Add records for each    item    in an order.
+     * Add records for each order.
+     * Add records for each item in an order.
      * 
-     * @param {*} itemsData//ingredients 
-     * @param {*} orderID //beverage 
+     * @param {*} itemsData
+     * @param {*} orderID 
      */
     insertOrderItems: (itemsData, orderID) => {
         let itemSet = [];
