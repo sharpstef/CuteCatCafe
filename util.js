@@ -56,9 +56,9 @@ module.exports = {
       }
     });
 
-    if(!login_status.isAdmin || (login_status.isAdmin == 0 && menuItems.length > 3)) {
+    if(!login_status.isAdmin) {
       menuItems.splice(3,1);
-    } else if (login_status.isAdmin && menuItems.length < 3) {
+    } else if (login_status.isAdmin && menuItems.length < 4) {
       menuItems.push(admin);
     }   
     

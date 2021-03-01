@@ -86,7 +86,7 @@ function getCats() {
  * @param {*} data 
  */
 function populateDropdown(data) {
-    dropdown.innerHTML = '<option value="" disable selected>Select Room</option>';
+    dropdown.innerHTML = '<option value="" disable selected>Select Cat</option>';
     data.forEach(item => {
         dropdown.innerHTML = `${dropdown.innerHTML} <option value="${item.catID}">${item.cat}</option>`;
     });

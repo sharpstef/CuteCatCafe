@@ -711,6 +711,7 @@ app.post('/reservations', async (req, res) => {
 // POST request to insert a new Reservation.
 app.post('/newReservation', async (req, res) => {
     let attributes = req.body;
+    console.info(req.body);
     
     if(req.user) {
         attributes.customerID = req.user.customerID;

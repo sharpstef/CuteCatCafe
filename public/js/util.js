@@ -45,7 +45,7 @@ function clearMessage() {
  * Helper to throttle the dropdown query load for dynamic content.
  * 
  * Referenced from: https://codeburst.io/throttling-and-debouncing-in-javascript-646d076d0a44
- * Last access: 2/22/2020
+ * Last access: 2/22/2021
  * 
  * @param {*} delay 
  * @param {*} fn 

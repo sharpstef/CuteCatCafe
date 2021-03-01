@@ -100,6 +100,6 @@ function bookRoom(data) {
 function resetForm() {
     let today = new Date().toISOString().substr(0, 10);
     document.getElementById("date").setAttribute("value", today);
-    document.getElementById("time").setAttribute("value", `${today.getHours}:${today.getSeconds}:00`);
+    document.getElementById("time").setAttribute("value", `08:00:00`);
     document.getElementById("duration").setAttribute("value", "30");
 }
