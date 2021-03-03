@@ -12,10 +12,10 @@
 <div class="container">
     <div id="userform">
         {{#if error}}
-        <h2 class="error">{{error}}</h2>
+        <div id="message" class="error"><i class="fa fa-times-circle"></i>{{error}}</div>
         {{/if}}
         {{#if success}}
-        <h2 class="success">{{success}}</h2>
+        <div id="message" class="success"><i class="fa fa-check"></i>{{success}}</div>
         {{/if}}
         <div id="registerForm" class="generic-form" >
             <h2>Create Customer Account</h2>

@@ -1,7 +1,6 @@
 let bevArray = JSON.parse(sessionStorage.getItem("bevArray"));
 
 if(bevArray) {
-    console.info("Items in storage");
     createTable(bevArray);
 }
 
@@ -23,13 +22,13 @@ function removeBev (beverage) {
  */
 function submitOrder(data) {
     let totalPrice = 0;
-    let quantity = 0;
     let itemDataArray = []
 
-    for (var i = 0; i < bevArray.length; i++){
+    for (var i = 0; i < bevArray.length; i++) {
+        let quantity = 0;
         data.resultData[i].quantity = document.getElementById(i.toString()).value;
-        quantity = data.resultData[i].quantity;
-        totalPrice = totalPrice + quantity * data.resultData[i].price;
+        quantity = data.resultData[i].quantity ? parseInt(data.resultData[i].quantity) : 1;
+        totalPrice = totalPrice + quantity * parseFloat(data.resultData[i].price);
 
         itemDataArray[i] = {
             beverageID: data.resultData[i].beverageID,

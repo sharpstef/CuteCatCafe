@@ -70,7 +70,7 @@ let Reservation = {
         let reservation = Reservation.fillReservationTemplate(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Reservations (customerID, roomID, totalFee, reservationStart, reservationEnd) VALUES (?, ?, ?, ?)';
+            let query = 'INSERT INTO Reservations (customerID, roomID, totalFee, reservationStart, reservationEnd) VALUES (?, ?, ?, ?, ?)';
             let values = [reservation.customerID, reservation.roomID, reservation.totalFee, reservation.reservationStart, reservation.reservationEnd];
             pool.query(query, values, (err, result, fields) => {
                 if (err) {

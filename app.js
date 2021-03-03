@@ -320,7 +320,7 @@ app.post('/addBeverage', async (req, res) => {
         });
     }).catch(error => {
         console.error("Error adding Beverage: ", error);
-        let message = "Error adding new beverage. Try again."
+        let message = "Error adding new beverage. Try again later."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding new beverage. Beverage name must be unique."
         }
@@ -348,7 +348,7 @@ app.post('/updateBeverage', async (req, res) => {
     await Beverage.updateBeverage(req.body).then(result => {
     }).catch(error => {
         console.error("Error updating Beverage: ", error);
-        let message = "Error updating beverage. Try again."
+        let message = "Error updating beverage. Try again later."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error updating beverage. Beverage name must be unique."
         }
@@ -440,7 +440,7 @@ app.post('/addCat', async (req, res) => {
     }).catch(error => {
         console.error("Error adding Cat: ", error);
         res.status(500).send({
-            message: 'Error adding new cat. Try again.'
+            message: 'Error adding new cat. Try again later.'
         });
     });
 });
@@ -487,7 +487,7 @@ app.post('/addIngredient', async (req, res) => {
         });
     }).catch(error => {
         console.error("Error adding Ingredient: ", error);
-        let message = "Error adding new ingredient. Try again."
+        let message = "Error adding new ingredient. Try again later."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding new ingredient. Ingredient name must be unique."
         }
@@ -505,7 +505,7 @@ app.post('/updateIngredient', async (req, res) => {
         });
     }).catch(error => {
         console.error("Error updating Ingredient: ", error);
-        let message = "Error updating ingredient. Try again."
+        let message = "Error updating ingredient. Try again later."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error updating ingredient. Ingredient name must be unique."
         }
@@ -571,7 +571,7 @@ app.post('/addRoom', async (req, res) => {
         });
     }).catch(error => {
         console.error("Error adding Room: ", error);
-        let message = "Error adding new room. Try again."
+        let message = "Error adding new room. Try again later."
         if (error.code === "ER_DUP_ENTRY") {
             message = "Error adding room. Room name must be unique."
         }
@@ -633,7 +633,7 @@ app.post('/checkout', async (req, res) => {
         }).catch(error => {
             console.error("Error creating order: ", error);
             res.status(500).send({
-                message: 'Error creating order. Try again.'
+                message: 'Error creating order. Try again later.'
             });
         });
         if (attributes.itemsData && orderID) {
@@ -647,7 +647,7 @@ app.post('/checkout', async (req, res) => {
 
     } else {
         res.status(500).send({
-            message: 'Error creating order. Try again.'
+            message: 'Error creating order. Try again later.'
         });
     }
 });
@@ -676,7 +676,7 @@ app.post('/reservations', async (req, res) => {
     let sTest = new Date(startTime);
     if ((endTime.getHours() < 8 || endTime.getHours() > 20 || (endTime.getHours() == 20 && endTime.getSeconds() > 1)) ||
         (sTest.getHours() < 8 || sTest.getHours() > 20 || (sTest.getHours() == 20 && sTest.getSeconds() > 1))) {
-        res.status(200).send({
+        return res.status(200).send({
             message: 'No available rooms. Please try again.'
         });
     }
@@ -696,14 +696,14 @@ app.post('/reservations', async (req, res) => {
                 item["totalFee"] = item.fee * (parseInt(req.body.duration) / 30);
             });
         }
-        res.status(200).json({
+        return res.status(200).json({
             "data": result,
             "search": req.body
         });
     }).catch(error => {
         console.error("Error getting Rooms: ", error);
-        res.status(500).send({
-            message: 'Error getting available rooms. Try again.'
+        return res.status(500).send({
+            message: 'Error getting available rooms. Try again later.'
         });
     });
 });
@@ -711,7 +711,6 @@ app.post('/reservations', async (req, res) => {
 // POST request to insert a new Reservation.
 app.post('/newReservation', async (req, res) => {
     let attributes = req.body;
-    console.info(req.body);
     
     if(req.user) {
         attributes.customerID = req.user.customerID;
@@ -723,12 +722,12 @@ app.post('/newReservation', async (req, res) => {
         }).catch(error => {
             console.error("Error creating Reservation: ", error);
             res.status(500).send({
-                message: 'Error creating reservation. Try again.'
+                message: 'Error creating reservation. Try again later.'
             });
         });
     } else {
         res.status(500).send({
-            message: 'Error creating reservation. Try again.'
+            message: 'Error creating reservation. Try again later.'
         });
     }
 });

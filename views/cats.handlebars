@@ -56,7 +56,7 @@
                 <td>\{{this.name}}</td>
                 <td>\{{this.breed}}</td>
                 <td>\{{this.age}}</td>
-                <td class="dateDisplay">\{{this.dateAdmitted}}</td>
+                <td>\{{dateDisplay this.dateAdmitted}}</td>
                 <td>\{{#if this.adopted}}Yes \{{else}} No \{{/if}}</td>
                 <td>\{{this.room}}</td>
                 <td><button type="submit" value="Delete" onclick="deleteCat(\{{{json this}}});">Delete</button></td>
@@ -65,7 +65,7 @@
       </tbody>
     </table>
     \{{else}}
-        <p>No cats in database.</p>
+        <p class="noData">No cats in database.</p>
     \{{/if}}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>

@@ -80,7 +80,7 @@ CREATE TABLE Reservations (
     reservationID int AUTO_INCREMENT NOT NULL,
     customerID int NOT NULL,
     roomID int NOT NULL,
-    totalFee decimal(4,2) NOT NULL,
+    totalFee decimal(6,2) NOT NULL,
     reservationStart datetime NOT NULL,
     reservationEnd datetime NOT NULL,
     PRIMARY KEY (reservationID),

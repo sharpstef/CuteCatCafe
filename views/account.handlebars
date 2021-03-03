@@ -58,9 +58,9 @@
         \{{#each orderData}}
         <tr id="\{{this.orderID}}">
             <tr>
-                    <td>\{{this.time}}</td>
-                    <td>$\{{this.total}}</td>
-                    <td>\{{#if this.complete}} Complete \{{/if}} </td>
+                    <td>\{{dateTimeDisplay this.time}}</td>
+                    <td>$\{{dollarDisplay this.total}}</td>
+                    <td>\{{#if this.complete}} Complete \{{else}} Order Placed \{{/if}} </td>
                     <td>
                         <ul>
                             \{{#each this.items}}
@@ -74,7 +74,7 @@
       </tbody>
     </table>
     \{{else}}
-        <p>You have no orders</p>
+        <p class="noData">You have no orders</p>
     \{{/if}}
 </script>
 <script id="res-template" type="text/x-handlebars-template">
@@ -95,9 +95,9 @@
         <tr id="\{{this.reservationID}}">
             <tr>
                 <td>\{{this.name}}</td>
-                <td>$\{{this.totalFee}}</td>
-                <td class="formatDate">\{{this.reservationStart}}</td>
-                <td class="formatDate">\{{this.reservationEnd}}</td>
+                <td>$\{{dollarDisplay this.totalFee}}</td>
+                <td class="formatDate">\{{dateTimeDisplay this.reservationStart}}</td>
+                <td class="formatDate">\{{dateTimeDisplay this.reservationEnd}}</td>
                 <td><button type="submit" value="Delete" onclick="deleteReservation(\{{{json this}}});">Delete</button></td>
             </tr>
         </tr> 
@@ -105,7 +105,7 @@
       </tbody>
     </table>
     \{{else}}
-        <p>You have no reservations</p>
+        <p class="noData">You have no reservations</p>
     \{{/if}}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>

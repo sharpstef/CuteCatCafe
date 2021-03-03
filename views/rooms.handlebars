@@ -52,7 +52,7 @@
                 <td>\{{this.name}}</td>
                 <td>\{{this.roomDescription}}</td>
                 <td>\{{#if this.reservable}}Yes \{{else}} No \{{/if}}</td>
-                <td>$\{{this.fee}}.00 per half hour</td>
+                <td>$\{{dollarDisplay this.fee}} per half hour</td>
                 <td>\{{this.cat}}</td>
                 <td><button type="submit" value="Delete" onclick="deleteRoom(\{{{json this}}});">Delete</button></td>
             </tr>
@@ -60,7 +60,7 @@
       </tbody>
     </table>
     \{{else}}
-        <p>No rooms in database.</p>
+        <p class="noData">No rooms in database.</p>
     \{{/if}}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>

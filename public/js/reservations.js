@@ -15,7 +15,7 @@ let searchForm = document.getElementById("search");
 let roomList = document.getElementById("dataDetails");
 
 searchForm.addEventListener("submit", getData);
-searchForm.addEventListener("formdata", formUpdate);
+searchForm.addEventListener("formdata", searchRooms);
 
 /**
  * Event listener handler to populate a new FormData instance.
@@ -32,11 +32,14 @@ function getData(e) {
  * 
  * @param {Object} e 
  */
-function formUpdate(e) {
+function searchRooms(e) {
     let data = {};
     e.formData.forEach((value, key) => {
         data[key] = value
     });
+
+    resetForm();
+    removeTable();
 
     const xhr = new XMLHttpRequest();
     // Handle success from API
@@ -99,7 +102,7 @@ function bookRoom(data) {
  */
 function resetForm() {
     let today = new Date().toISOString().substr(0, 10);
-    document.getElementById("date").setAttribute("value", today);
-    document.getElementById("time").setAttribute("value", `08:00:00`);
-    document.getElementById("duration").setAttribute("value", "30");
+    document.getElementById("date").value = today;
+    document.getElementById("time").value = `08:00:00`;
+    document.getElementById("duration").value = 30;
 }

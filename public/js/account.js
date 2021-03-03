@@ -53,7 +53,6 @@ function getReservations() {
  * @param {Object} item 
  */
 function deleteReservation(item) {
-    clearMessage();
     const xhr = new XMLHttpRequest();
     // Handle success from API
     xhr.addEventListener("load", event => {

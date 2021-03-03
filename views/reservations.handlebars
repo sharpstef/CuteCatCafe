@@ -81,7 +81,7 @@
             <td>\{{this.name}}</td>
             <td>\{{this.roomDescription}}</td>
             <td>\{{this.cat}}</td>
-            <td>\{{this.fee}}</td>
+            <td>$\{{dollarDisplay this.fee}} per half hour</td>
             <td>
               <button type="submit" value="Reserve" onclick="bookRoom(\{{{json this}}});">Reserve</button>
             </td>

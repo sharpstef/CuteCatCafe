@@ -30,7 +30,7 @@
             <tr id="\{{this.beverageID}}">
                 <td>\{{this.name}}</td>
                 <td><input type="number" name="quantity" id="\{{@index}}" value="\{{this.quantity}}"></td>
-                <td>\{{this.price}}</td>
+                <td>\{{dollarDisplay this.price}}</td>
                 <td><button type="submit" onclick="removeBev(\{{{json this}}});">Remove</button></td>
             </tr>
         \{{/each}}
@@ -38,7 +38,8 @@
     </table>
     <button type="submit" onclick="submitOrder(\{{{json this}}});">Place Order</button>
     \{{else}}
-        <p>No items in cart.</p>
+        <h2 class="noData">Your cart is empty :(</h2>
+        <p class="noData">Go to the <a href='/menu'>Menu</a> to add items for checkout.</p>
     \{{/if}}
 </script>
 
