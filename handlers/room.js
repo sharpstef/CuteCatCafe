@@ -82,8 +82,9 @@ let Room = {
         let room = Room.fillRoomTemplate(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Rooms SET ?';
-            pool.query(query, room, (err, result, fields) => {
+            let query = 'INSERT INTO Rooms (name, roomDescription, reservable, fee) VALUES (?, ?, ?, ?)';
+            let values = [room.name, room.roomDescription, room.reservable, room.fee];
+            pool.query(query, values, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new room", attributes.name, ". Error JSON:",
                         JSON.stringify(err, null, 2));

@@ -70,9 +70,9 @@ let Reservation = {
         let reservation = Reservation.fillReservationTemplate(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Reservations SET ?';
-            // (customerID, roomID, totalFee, reservationStart, reservationEnd)
-            pool.query(query, reservation, (err, result, fields) => {
+            let query = 'INSERT INTO Reservations (customerID, roomID, totalFee, reservationStart, reservationEnd) VALUES (?, ?, ?, ?)';
+            let values = [reservation.customerID, reservation.roomID, reservation.totalFee, reservation.reservationStart, reservation.reservationEnd];
+            pool.query(query, values, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new reservation", attributes.customerID, ". Error JSON:",
                         JSON.stringify(err, null, 2));

@@ -10,8 +10,9 @@ let Order = {
         let order = Order.fillOrderTemplate(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Orders SET ?';
-            pool.query(query, order, (err, result, fields) => {
+            let query = 'INSERT INTO Orders (purchaseTime, totalAmount, complete, customerID) VALUES (?, ?, ?, ?)';
+            let values = [order.purchaseTime, order.totalAmount, order.complete, order.customerID];
+            pool.query(query, values, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new order", attributes.customerID, ". Error JSON:",
                         JSON.stringify(err, null, 2));

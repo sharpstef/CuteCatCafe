@@ -140,8 +140,9 @@ let Beverage = {
         let beverage = Beverage.fillBeverageTemplateInsert(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Beverages SET ?';
-            pool.query(query, beverage, (err, result, fields) => {
+            let query = 'INSERT INTO Beverages (name, description, type, price) VALUES (?, ?, ?, ?)';
+            let values = [beverage.name, beverage.description, beverage.type, beverage.price];
+            pool.query(query, values, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new beverage", attributes.name, ". Error JSON:",
                         JSON.stringify(err, null, 2));

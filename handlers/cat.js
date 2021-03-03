@@ -83,8 +83,9 @@ let Cat = {
         let cat = Cat.fillCatTemplate(attributes);
 
         return new Promise((resolve, reject) => {
-            let query = 'INSERT INTO Cats SET ?';
-            pool.query(query, cat, (err, result, fields) => {
+            let query = 'INSERT INTO Cats (name, breed, age, dateAdmitted, adopted, roomID) VALUES (?, ?, ?, ?, ?, ?)';
+            let values = [cat.name, cat.breed, cat.age, cat.dateAdmitted, cat.adopted, cat.roomID];
+            pool.query(query, values, (err, result, fields) => {
                 if (err) {
                     console.error("Unable to add new cat", attributes.name, ". Error JSON:",
                         JSON.stringify(err, null, 2));
