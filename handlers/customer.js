@@ -115,8 +115,8 @@ let Customer = {
                 resolve(null);
             } else {
                 customer = Customer.newCustomer(attributes);
-                let query = 'INSERT INTO Customers SET ?';
-                pool.query(query, customer, (err, result, fields) => {
+                let query = 'INSERT INTO Customers (firstName, lastName, email, password, salt, member, isAdmin) VALUES ?';
+                pool.query(query, [customer.firstName, customer.lastName, customer.email, customer.password, customer.salt, customer.member, customer.isAdmin], (err, result, fields) => {
                     if (err) {
                         console.error("Unable to add new customer", customer.email, ". Error JSON:",
                             JSON.stringify(err, null, 2));
