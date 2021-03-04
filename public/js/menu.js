@@ -3,6 +3,7 @@ getBeverages();
 
 let bevArray = [];
 
+
 /**
 * Delete a beverage given the provided beverageID.
 * 
@@ -12,6 +13,7 @@ function addToCart(beverage) {
     beverage["quantity"] = 1;
     bevArray.push(beverage);
     sessionStorage.setItem("bevArray", JSON.stringify(bevArray));
+    alert("Beverage added to cart!")
 }
 
 /**
