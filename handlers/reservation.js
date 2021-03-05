@@ -20,7 +20,7 @@ let Reservation = {
                         WHERE reservationStart 
                         BETWEEN ?
                         AND ?
-                        AND reservationEnd 
+                        OR reservationEnd 
                         BETWEEN ?
                         AND ?
                     )
