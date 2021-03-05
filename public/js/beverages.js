@@ -55,12 +55,13 @@ function getBeverages() {
  * @param {Object} item 
  */
 function editRow(item) {
+    resetForm();
     clearMessage();
-    document.getElementById("id").setAttribute("value", item.beverageID);
-    document.getElementById("name").setAttribute("value", item.name);
-    document.getElementById("description").setAttribute("value", item.description);
+    document.getElementById("id").value = item.beverageID;
+    document.getElementById("name").value = item.name;
+    document.getElementById("description").value = item.description;
     document.getElementById("type").value = item.type;
-    document.getElementById("price").setAttribute("value", item.price);
+    document.getElementById("price").value = item.price;
 
     // Check boxes for the ingredients in the drink
     item.ingredients.forEach(ingredient => {
@@ -173,7 +174,7 @@ function resetForm() {
  * Helper to uncheck all boxes in the form.
  */
 function uncheckAll() {
-    let ingredients = document.getElementsByName(ingredient);
+    let ingredients = document.getElementsByName("ingredients");
 
     ingredients.forEach(ingredient => {
         ingredient.checked = false;

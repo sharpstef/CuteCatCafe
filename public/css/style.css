@@ -51,15 +51,17 @@ body {
 /*====================================
 	LINKS 
 ====================================*/
-a {
+a, #reset {
+  background: transparent;
   color: #252525;
   -webkit-transition: 0.5s;
   transition: 0.5s;
   text-decoration: none !important;
 }
    
-a:hover, a:active, a:focus {
+a:hover, a:active, a:focus, #reset button:hover, #reset button:active, #reset button:focus {
   color: #7e317a;
+  border: none;
 	outline: none;
 	text-decoration: none;
 }
@@ -70,6 +72,10 @@ a img {
    
 p {
 	line-height: 150%;
+}
+
+#reset {
+  border: none;
 }
    
    

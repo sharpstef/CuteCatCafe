@@ -11,10 +11,6 @@ let roomList = document.getElementById("dataDetails");
 addForm.addEventListener("submit", getData);
 addForm.addEventListener("formdata", formUpdate);
 
-let reset = document.getElementById("reset");
-
-reset.onclick(resetForm());
-
 /**
  * Event listener handler to populate a new FormData instance.
  * @param {Object} e 
@@ -108,8 +104,8 @@ function formUpdate(e) {
  */
 function editRow(item) {
     clearMessage();
-    document.getElementById("id").setAttribute("value", item.ingredientID);
-    document.getElementById("name").setAttribute("value", item.name);
+    document.getElementById("id").value = item.ingredientID;
+    document.getElementById("name").value = item.name;
 
     document.getElementById("ingredientForm").scrollIntoView({
         behavior: 'smooth',
