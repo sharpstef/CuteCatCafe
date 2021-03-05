@@ -10,7 +10,7 @@ Handlebars.registerHelper('dateDisplay', (date) => {
 
 Handlebars.registerHelper('dateTimeDisplay', (date) => {
     let d = new Date(date);
-    return `${('0' + (d.getMonth()+1)).slice(-2)}/${('0' + d.getDate()).slice(-2)}/${d.getFullYear()} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getSeconds()).slice(-2)}`;
+    return `${('0' + (d.getMonth()+1)).slice(-2)}/${('0' + d.getDate()).slice(-2)}/${d.getFullYear()} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}`;
 });
 
 Handlebars.registerHelper('dollarDisplay', (amount) => {
