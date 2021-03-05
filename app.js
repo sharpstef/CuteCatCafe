@@ -632,7 +632,7 @@ app.post('/checkout', async (req, res) => {
             });
         }).catch(error => {
             console.error("Error creating order: ", error);
-            res.status(500).send({
+            return res.status(500).send({
                 message: 'Error creating order. Try again later.'
             });
         });
