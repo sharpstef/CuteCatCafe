@@ -615,7 +615,7 @@ app.get('/checkout', isAuthenticated, (req, res) => {
 
 app.post('/checkout', async (req, res) => {
     let purchaseTime = new Date();  // Current time (when order was placed)
-    purchaseTime = `${purchaseTime.getFullYear()}-${('0' + (purchaseTime.getMonth()+1)).slice(-2)}-${('0' + purchaseTime.getDate()).slice(-2)} ${('0' + purchaseTime.getHours()).slice(-2)}:${('0' + purchaseTime.getSeconds()).slice(-2)}:00`;
+    purchaseTime = `${purchaseTime.getFullYear()}-${('0' + (purchaseTime.getMonth()+1)).slice(-2)}-${('0' + purchaseTime.getDate()).slice(-2)} ${('0' + purchaseTime.getHours()).slice(-2)}:${('0' + purchaseTime.getMinutes()).slice(-2)}:00`;
 
     let attributes = req.body; 
     
