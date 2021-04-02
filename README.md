@@ -15,10 +15,7 @@ Contains modules specific to each entity or entity pair.
 Main handler for site functionality. Contains all get and post routes. 
 
 ### config.js
-Not included. Contains connection information to AWS database.
-
-### osuConfig.js
-Not included. Contains connection information to OSU database.
+Contains connection information to database.
 
 ### connect.js
 Helper function for making a mysql pool connection to a database. 
